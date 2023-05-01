@@ -9,7 +9,7 @@ const TabataSchema = new Schema({
         type: Number,
         required: true
     },
-    workoutTime: {
+    workTime: {
         type: Number,
         required: true
     },
@@ -24,7 +24,5 @@ const TabataSchema = new Schema({
         }
     }]
 });
-
-module.exports = model("Tabata", TabataSchema);
 
 module.exports = model("Tabata", TabataSchema)

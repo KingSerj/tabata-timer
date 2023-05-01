@@ -3,7 +3,8 @@ const TabataModel = require("../models/TabataModels")
 class TabataController {
     async getTabataPrograms(req,res) {
         try {
-            //res.send("Test")
+            const tabata = await TabataModel.find({}, { title: true, rounds: true, workTime: true, restTime: true, exercises: true })
+            res.status(200).json(tabata)
         } catch (e) {
             res.status(400).json({message: "Произошла ошибка при получении"})
         }
@@ -15,9 +16,7 @@ class TabataController {
                 res.status(400).json({message: "Пожалуйста, добавьте заголовок программы"})
             }
 
-            const { title, rounds, workoutTime, restTime, exercises } = req.body
-
-            const tabataModel = new TabataModel({title, rounds, workoutTime, restTime, exercises})
+            const tabataModel = new TabataModel({title: req.body, rounds: req.body, workTime: req.body, restTime: req.body, exercises: req.body})
 
             await tabataModel.save()
 
@@ -26,21 +25,21 @@ class TabataController {
         }
     }
 
-    async editTabataProgram(req, res) {
-        try {
+    // async deleteTabataProgram(req, res) {
+    //     try {
+    //
+    //     } catch (e) {
+    //         res.status(400).json({message: "Произошла ошибка при удалении"})
+    //     }
+    // }
 
-        } catch (e) {
-            res.status(400).json({message: "Произошла ошибка при редактировании"})
-        }
-    }
-
-    async deleteTabataProgram(req, res) {
-        try {
-
-        } catch (e) {
-            res.status(400).json({message: "Произошла ошибка при удалении"})
-        }
-    }
+    // async editTabataProgram(req, res) {
+    //     try {
+    //
+    //     } catch (e) {
+    //         res.status(400).json({message: "Произошла ошибка при редактировании"})
+    //     }
+    // }
 }
 
 module.exports = new TabataController()
