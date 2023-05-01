@@ -12,7 +12,7 @@ export const Menu = styled.div`
 `
 
 export const MenuItem = styled(NavLink)`
-  font-size: 15px;
+  font-size: 18px;
   text-decoration: none;
   color: #F8F7F9;
 

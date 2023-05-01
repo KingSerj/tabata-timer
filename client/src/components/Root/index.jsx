@@ -6,8 +6,9 @@ import {Container} from "../Container";
 export const Root = () => <>
     <Container>
         <SC.Menu>
-            <SC.MenuItem to={"/timer"}>TIMER</SC.MenuItem>
+            <SC.MenuItem to={"/"}>ABOUT</SC.MenuItem>
             <SC.MenuItem to={"/settings"}>SETTINGS</SC.MenuItem>
+            <SC.MenuItem to={"/timer"}>TIMER</SC.MenuItem>
             <SC.MenuItem to={"/programs"}>PROGRAMS</SC.MenuItem>
         </SC.Menu>
     </Container>
