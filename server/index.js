@@ -1,9 +1,13 @@
 const express = require("express")
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
+const tabataRoutes = require("./routes/tabataRoutes")
 
 require("dotenv").config()
 
 const app = express()
+
+app.use(express.json())
+app.use("/api/tabata", tabataRoutes)
 
 const PORT = process.env.PORT || 3001
 
