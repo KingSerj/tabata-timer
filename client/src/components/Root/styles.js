@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import {NavLink} from "react-router-dom";
-import "@fontsource/montserrat"
 
 export const Menu = styled.div`
   display: flex;
