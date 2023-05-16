@@ -17,12 +17,9 @@ const TabataSchema = new Schema({
         type: Number,
         required: true
     },
-    exercises: [{
-        title: {
-            type: String,
-            required: true
-        }
-    }]
+    exercises: {
+        type: [String],
+        required: true
+    }
 });
-
 module.exports = model("Tabata", TabataSchema)
