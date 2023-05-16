@@ -11,14 +11,22 @@ class TabataController {
     }
 
     async addTabataProgram(req, res) {
+
         try {
             if (!req.body.title) {
                 res.status(400).json({message: "Пожалуйста, добавьте заголовок программы"})
             }
 
-            const tabataModel = new TabataModel({title: req.body, rounds: req.body, workTime: req.body, restTime: req.body, exercises: req.body})
+            const tabataModel = new TabataModel({
+                title: req.body.title,
+                rounds: req.body.rounds,
+                workTime: req.body.workTime,
+                restTime: req.body.restTime,
+                exercises: req.body.exercises
+            });
 
             await tabataModel.save()
+            res.status(200).json({message: "Программа успешно добавлена"})
 
         } catch (e) {
             res.status(400).json({message: "Произошла ошибка при добавлении"})
