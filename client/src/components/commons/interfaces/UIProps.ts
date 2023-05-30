@@ -1,12 +1,12 @@
-import {ReactNode} from "react";
+import React, {ReactNode} from "react";
 
 export interface UIProps {
     children?: ReactNode;
-    type?: "number" | "text"
-    props?: any
-    onClick?: () => void
-    label?: string
-    value?: "text" | "number"
-    onChange?: () => void
-    disabled?: boolean
+    type?: 'number' | 'text';
+    onClick?: any;
+    label?: string;
+    value?: any;
+    onChange?: (event: React.ChangeEvent<HTMLInputElement>) => any;
+    disabled?: boolean;
+    props?: any;
 }

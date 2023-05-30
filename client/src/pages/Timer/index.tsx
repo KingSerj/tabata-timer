@@ -1,3 +1,11 @@
 import React from "react";
+import {Box} from "../../components/ui/Box";
 
-export const Timer = () => <div>Это основной таймер</div>
+export const Timer = () => {
+
+    return (
+        <Box>
+
+        </Box>
+    )
+}
