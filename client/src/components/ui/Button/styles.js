@@ -12,7 +12,7 @@ export const Button = styled.button`
   font-weight: bold;
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
   cursor: pointer;
-  width: 160px;
+  width: 180px;
 
   &:hover {
     background-color: #6300a7;

@@ -20,7 +20,7 @@ export const Input = styled.input`
   border-bottom: 1.5px solid #ccc;
   padding: 5px 0;
   margin: 0 10px;
-  width: 100px;
+  width: 120px;
   &:focus {
     outline: none;
   }
