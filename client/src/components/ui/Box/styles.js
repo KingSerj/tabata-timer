@@ -7,7 +7,7 @@ export const Box = styled.div`
     0 -10px 15px -10px rgba(0,0,0,0.5),
   10px 0 15px -10px rgba(0,0,0,0.5),
   -10px 0 15px -10px rgba(0,0,0,0.5);
-  padding: 30px 30px 0 30px;
+  padding: 30px;
   width: 500px;
   height: auto;
   min-height: 600px;

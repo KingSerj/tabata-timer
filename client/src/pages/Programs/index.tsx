@@ -9,7 +9,7 @@ import {Button} from "../../components/ui/Button";
 import {Exercise} from "../../components/Exercise";
 import {Modal} from "../../components/ui/Modal";
 import {NoButton, YesButton} from "../../components/ui/Modal/ModalButton/styles";
-import {MainText} from "../../components/ui/Texts/Main";
+import {Small} from "../../components/ui/Texts/Small";
 
 export const Programs = () => {
     const [programList, setProgramList] = useState<any[]>([]);
@@ -173,7 +173,7 @@ export const Programs = () => {
                     {showSuccessDeleteModal && <Modal>Program has been successfully deleted!</Modal>}
                     <Typo>Exercises:</Typo>
                     <Button onClick={updatedAddExercises}>ADD EXERCISE</Button>
-                    <MainText>You can change the exercise order by simply dragging the exercise number and releasing it at the desired location.</MainText>
+                    <Small>You can change the exercise order by simply dragging the exercise number and releasing it at the desired location.</Small>
                     {selectedProgram.exercises.map((exercise: string, index: number) => (
                         <Exercise
                             key={index}
@@ -182,9 +182,9 @@ export const Programs = () => {
                             value={exercise}
                             onChange={(event) => updatedChangeExercises(event, index)}
                             onClick={() => updatedDeleteExercises(index)}
-                            onDragStart={(e: React.DragEvent<HTMLDivElement>) => handleDragStart(e, index)}
-                            onDragOver={(e: React.DragEvent<HTMLDivElement>) => handleDragOver(e)}
-                            onDrop={(e: React.DragEvent<HTMLDivElement>) => handleDrop(e, index)}
+                            onDragStart={(event: React.DragEvent<HTMLDivElement>) => handleDragStart(event, index)}
+                            onDragOver={(event: React.DragEvent<HTMLDivElement>) => handleDragOver(event)}
+                            onDrop={(event: React.DragEvent<HTMLDivElement>) => handleDrop(event, index)}
                         />
                     ))}
                 </>

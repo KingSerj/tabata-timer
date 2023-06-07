@@ -1,5 +1,6 @@
 export interface SelectProps {
-    options: Array<object>
+    options?: Array<object>
     placeholder: string
     onChange?: any
+    isDisabled?: any
 }

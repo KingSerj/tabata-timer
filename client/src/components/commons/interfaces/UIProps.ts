@@ -2,7 +2,7 @@ import React, {ReactNode} from "react";
 
 export interface UIProps {
     children?: ReactNode;
-    type?: 'number' | 'text';
+    type?: "number" | "text";
     onClick?: any;
     label?: string;
     value?: any;
