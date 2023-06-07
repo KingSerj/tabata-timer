@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Box} from "../../components/ui/Box";
 import {Typo} from "../../components/ui/Texts/Typo";
-import {MainText} from "../../components/ui/Texts/Main";
+import {Small} from "../../components/ui/Texts/Small";
 import {Input} from "../../components/ui/Input";
 import {Exercise} from "../../components/Exercise";
 import {Button} from "../../components/ui/Button";
@@ -109,7 +109,7 @@ export const Settings = () => {
         <Box>
             <Typo>Settings:</Typo>
             <br />
-            <MainText>Time should be in seconds, ex: 1 min = 60s.</MainText>
+            <Small>Time should be in seconds, ex: 1 min = 60s.</Small>
             <Input label={"Program name:"} type={"text"} value={title} onChange={handleTitleAdd} />
             <Input label={"Workout Time:"} type={"number"} value={workTime} onChange={handleWorkoutTimeAdd} />
             <Input label={"Rest Time:"} type={"number"} value={restTime} onChange={handleRestTimeAdd} />

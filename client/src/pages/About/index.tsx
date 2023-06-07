@@ -1,11 +1,11 @@
 import React from "react";
 import {Box} from "../../components/ui/Box";
-import {DescriptionText} from "../../components/ui/Texts/Description";
+import {Description} from "../../components/ui/Texts/Description";
 
 export const About = () => {
     return (
         <Box>
-            <DescriptionText>
+            <Description>
                 Tabata Timer is a convenient online tool for conducting workouts using the Tabata interval training method. With this timer, you can easily create personalized workout programs and keep track of rest and preparation times between exercises.
                 <br/>
                 <br/>
@@ -19,7 +19,7 @@ export const About = () => {
                 <br/>
                 <br/>
                 Use Tabata Timer for your workouts, improve your form, and achieve new athletic achievements.
-            </DescriptionText>
+            </Description>
         </Box>
     )
 }
