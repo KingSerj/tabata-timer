@@ -80,28 +80,28 @@ export const Settings = () => {
     }
 
     const savedProgram = useTabataProgram("http://localhost:3002/api/tabata/add", "POST");
-    const onSave = async (e: React.FormEvent<HTMLButtonElement>) => {
-        e.preventDefault()
+    const onSave = async (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
         await savedProgram({
             title: title,
             rounds: rounds,
             exercises: exercises,
             workTime: workTime,
             restTime: restTime,
-        })
+        });
         setProgramSettings({
             title: "",
             rounds: "",
             workTime: "",
             restTime: "",
             exercises: [""],
-        })
+        });
         setShowSuccessModal(true);
 
         setTimeout(() => {
             setShowSuccessModal(false);
         }, 1200);
-    }
+    };
 
     const disabled = !title || !rounds || !workTime || !restTime || exercises.some((exercise) => exercise.trim() === "")
 
