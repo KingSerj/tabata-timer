@@ -9,12 +9,12 @@ import {TimerButton} from "../../components/Timer/TimerButton";
 import {ExerciseBox} from "../../components/Timer/ExerciseBox";
 import {Medium} from "../../components/ui/Texts/Medium";
 import {Large} from "../../components/ui/Texts/Large";
-import { AiOutlinePlayCircle } from "react-icons/ai"
-import { AiOutlinePause } from "react-icons/ai"
+import { AiOutlinePlayCircle } from "react-icons/ai";
+import { AiOutlinePause } from "react-icons/ai";
 import {Small} from "../../components/ui/Texts/Small";
 import {Modal} from "../../components/ui/Modal";
 // @ts-ignore
-import countdown from "../../assets/countdown.wav"
+import countdown from "../../assets/countdown.wav";
 // @ts-ignore
 import endSound from "../../assets/end.mp3";
 
@@ -28,7 +28,7 @@ export const Timer = () => {
     const [currentRound, setCurrentRound] = useState<number>(1)
     const [showSuccessModal, setShowSuccessModal] = useState(false)
     const [resetKey, setResetKey] = useState<number>(0)
-    const [isStartSoundPlaying, setIsStartSoundPlaying] = useState(false);
+    const [isStartSoundPlaying, setIsStartSoundPlaying] = useState(false)
     const [isInputDisabled, setIsInputDisabled] = useState(false)
 
     const getProgramList = useGetProgramList()
@@ -90,48 +90,48 @@ export const Timer = () => {
         const interval = setInterval(() => {
             if (isTimerCounting) {
                 if (timer > 0) {
-                    setTimer((prevTimer) => prevTimer - 1);
-                    setIsInputDisabled(true);
+                    setTimer((prevTimer) => prevTimer - 1)
+                    setIsInputDisabled(true)
                 } else if (timer === 0 && currentExerciseIndex < restExercises.length - 1) {
-                    setCurrentExerciseIndex((prevIndex) => prevIndex + 1);
+                    setCurrentExerciseIndex((prevIndex) => prevIndex + 1)
                     if (restExercises[currentExerciseIndex + 1] === "Rest") {
-                        setTimer(selectedProgram?.restTime || 0); // Use default value 0 if restTime is undefined
+                        setTimer(selectedProgram?.restTime || 0)
                     } else {
-                        setTimer(selectedProgram?.workTime || 0); // Use default value 0 if workTime is undefined
+                        setTimer(selectedProgram?.workTime || 0)
                     }
                 } else if (timer === 0 && currentExerciseIndex === restExercises.length - 1) {
-                    if (currentRound < (selectedProgram?.rounds || 0)) { // Use default value 0 if rounds is undefined
-                        setIsTimerCounting(false);
-                        setTimer(selectedProgram?.workTime || 0); // Use default value 0 if workTime is undefined
-                        setCurrentRound((prevRound) => prevRound + 1);
-                        setCurrentExerciseIndex(0);
-                        generateNewExercises();
-                        playStartSound();
-                        setIsStartSoundPlaying(true);
+                    if (currentRound < (selectedProgram?.rounds || 0)) {
+                        setIsTimerCounting(false)
+                        setTimer(selectedProgram?.workTime || 0)
+                        setCurrentRound((prevRound) => prevRound + 1)
+                        setCurrentExerciseIndex(0)
+                        generateNewExercises()
+                        playStartSound()
+                        setIsStartSoundPlaying(true)
                         setTimeout(() => {
-                            setIsTimerCounting(true);
-                            setIsStartSoundPlaying(false);
-                        }, 3000);
+                            setIsTimerCounting(true)
+                            setIsStartSoundPlaying(false)
+                        }, 3000)
                     } else {
-                        setIsTimerCounting(false);
-                        setShowSuccessModal(true);
-                        playFinishSound();
-                        setIsStartSoundPlaying(false);
+                        setIsTimerCounting(false)
+                        setShowSuccessModal(true)
+                        playFinishSound()
+                        setIsStartSoundPlaying(false)
                         setTimeout(() => {
-                            setSelectedProgram(null);
-                            handleResetSelect();
-                            setIsInputDisabled(false);
-                            setShowSuccessModal(false);
-                        }, 2500);
+                            setSelectedProgram(null)
+                            handleResetSelect()
+                            setIsInputDisabled(false)
+                            setShowSuccessModal(false)
+                        }, 2500)
                     }
                 }
             }
-        }, 1000);
+        }, 1000)
 
         return () => {
-            clearInterval(interval);
+            clearInterval(interval)
         };
-    }, [isTimerCounting, timer, currentExerciseIndex, restExercises, selectedProgram, currentRound]);
+    }, [isTimerCounting, timer, currentExerciseIndex, restExercises, selectedProgram, currentRound])
 
     const handlePlay = () => {
         if (!isStartSoundPlaying) {
@@ -182,9 +182,7 @@ export const Timer = () => {
                         </TimerButton>
                     )}
                     {isStartSoundPlaying && (
-                        <Small>
-                            You can't change the program or pause it once the timer is about to start.
-                        </Small>
+                        <Small>You can't change the program or pause it once the timer is about to start.</Small>
                     )}
                     {isTimerCounting && (
                         <Small>You can't change the program while the timer is running.</Small>
@@ -196,7 +194,7 @@ export const Timer = () => {
                         <ExerciseBox key={index}>{exercise}</ExerciseBox>
                     ))}
                 </>
-            ) : null}
+            ):null}
         </Box>
     )
 }

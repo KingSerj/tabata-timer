@@ -130,7 +130,7 @@ export const Programs = () => {
 
     const handleDrop = (event: React.DragEvent<HTMLDivElement>, newIndex: number) => {
         const draggedIndex = parseInt(event.dataTransfer.getData("text/plain"))
-        const newExerciseList = [...selectedProgram.exercises];
+        const newExerciseList = [...selectedProgram.exercises]
         const [draggedExercise] = newExerciseList.splice(draggedIndex, 1)
         newExerciseList.splice(newIndex, 0, draggedExercise)
         setSelectedProgram({...selectedProgram, exercises: newExerciseList})
