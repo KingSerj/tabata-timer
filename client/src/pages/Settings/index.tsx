@@ -96,10 +96,10 @@ export const Settings = () => {
             restTime: "",
             exercises: [""],
         });
-        setShowSuccessModal(true);
+        setShowSuccessModal(true)
 
         setTimeout(() => {
-            setShowSuccessModal(false);
+            setShowSuccessModal(false)
         }, 1200);
     };
 
