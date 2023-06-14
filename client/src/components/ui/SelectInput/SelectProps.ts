@@ -1,6 +1,6 @@
 export interface SelectProps {
     options?: Array<object>
     placeholder: string
-    onChange?: any
-    isDisabled?: any
+    onChange?: (selected: any) => Promise<void>
+    isDisabled?: boolean
 }

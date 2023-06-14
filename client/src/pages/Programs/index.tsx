@@ -10,27 +10,28 @@ import {Exercise} from "../../components/Exercise";
 import {Modal} from "../../components/ui/Modal";
 import {NoButton, YesButton} from "../../components/ui/Modal/ModalButton/styles";
 import {Small} from "../../components/ui/Texts/Small";
+import {Program} from "../../components/commons/interfaces/ProgramProps";
 
 export const Programs = () => {
-    const [programList, setProgramList] = useState<any[]>([]);
+    const [programList, setProgramList] = useState<Program[]>([])
     const [selectedProgram, setSelectedProgram] = useState<any>()
     const [showDeleteModal, setShowDeleteModal] = useState(false)
     const [showUpdateModal, setShowUpdateModal] = useState(false)
     const [showSuccessDeleteModal, setSuccessDeleteModal] = useState(false)
     const [showSuccessUpdateModal, setSuccessUpdateModal] = useState(false)
-    const [resetKey, setResetKey] = useState(0);
+    const [resetKey, setResetKey] = useState(0)
 
 
-    const getProgramList = useGetProgramList();
+    const getProgramList = useGetProgramList()
     const getProgramSettings = useTabataProgram("http://localhost:3002/api/tabata/settings", "POST")
     const deleteProgramSettings = useTabataProgram("http://localhost:3002/api/tabata/delete", "DELETE")
     const updateProgramSettings = useTabataProgram("http://localhost:3002/api/tabata/edit", "PUT")
 
     const updateProgramList = useCallback(() => {
         getProgramList().then((result) => {
-            setProgramList(result);
-        });
-    }, [getProgramList]);
+            setProgramList(result)
+        })
+    }, [getProgramList])
 
     useEffect(() => {
         updateProgramList()
@@ -39,21 +40,21 @@ export const Programs = () => {
     const options = programList.map((program) => ({
         label: program.title,
         value: program._id,
-    }));
+    }))
 
     const handleResetSelect = () => {
-        setResetKey((prevKey) => prevKey + 1);
-    };
+        setResetKey((prevKey) => prevKey + 1)
+    }
 
-    const chosenProgram = async (selected: any) => {
+    const chosenProgram = async (selected: Program) => {
         await getProgramSettings({_id: selected.value}).then((result) => {
-            setSelectedProgram(result);
-        });
-    };
+            setSelectedProgram(result)
+        })
+    }
 
     const updatedTitle = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSelectedProgram({...selectedProgram, title: event.target.value });
-    };
+        setSelectedProgram({...selectedProgram, title: event.target.value })
+    }
 
     const updatedWorkTime = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedProgram({...selectedProgram, workTime: event.target.value})
@@ -79,7 +80,7 @@ export const Programs = () => {
             newExercises.splice(index, 1)
             setSelectedProgram({...selectedProgram, exercises: newExercises})
         }
-    };
+    }
 
     const updatedAddExercises = () => {
         setSelectedProgram({...selectedProgram, exercises: [...selectedProgram.exercises, ""]})

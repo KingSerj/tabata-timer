@@ -5,4 +5,6 @@ export interface Program {
     rounds: number
     workTime: number
     restTime: number
+    selected?: object[]
+    value?: string
 }

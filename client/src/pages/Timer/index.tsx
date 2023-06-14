@@ -21,7 +21,7 @@ import endSound from "../../assets/end.mp3";
 export const Timer = () => {
     const [programList, setProgramList] = useState<Program[]>([])
     const [selectedProgram, setSelectedProgram] = useState<Program | null>(null)
-    const [restExercises, setRestExercises] = useState<any[]>([])
+    const [restExercises, setRestExercises] = useState<String[]>([])
     const [currentExerciseIndex, setCurrentExerciseIndex] = useState<number>(0)
     const [timer, setTimer] = useState<number>(0)
     const [isTimerCounting, setIsTimerCounting] = useState<boolean>(false)
@@ -49,7 +49,7 @@ export const Timer = () => {
         value: program._id,
     }))
 
-    const chosenProgram = async (selected: any) => {
+    const chosenProgram = async (selected: Program) => {
         await getProgramSettings({_id: selected.value}).then((result) => {
             setSelectedProgram(result)
             setTimer(result?.workTime || 0)
