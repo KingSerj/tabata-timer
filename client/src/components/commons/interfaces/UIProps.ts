@@ -8,5 +8,4 @@ export interface UIProps {
     value?: string | number
     onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
     disabled?: boolean
-    props?: any
 }
