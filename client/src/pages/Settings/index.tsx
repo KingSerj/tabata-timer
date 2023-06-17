@@ -1,12 +1,13 @@
-import React, {useEffect, useState} from "react";
-import {Box} from "../../components/ui/Box";
-import {Typo} from "../../components/ui/Texts/Typo";
-import {Small} from "../../components/ui/Texts/Small";
-import {Input} from "../../components/ui/Input";
-import {Exercise} from "../../components/Exercise";
-import {Button} from "../../components/ui/Button";
-import {useTabataProgram} from "../../hooks/useTabataProgram";
-import {Modal} from "../../components/ui/Modal";
+import React, { useState } from "react";
+import { Box } from "../../components/ui/Box";
+import { Typo } from "../../components/ui/Texts/Typo";
+import { Small } from "../../components/ui/Texts/Small";
+import { Input } from "../../components/ui/Input";
+import { Exercise } from "../../components/Exercise";
+import { Button } from "../../components/ui/Button";
+import { useTabataProgram } from "../../hooks/useTabataProgram";
+import { Modal } from "../../components/ui/Modal";
+import { TABATA_ADD_ENDPOINT } from "../../api/endpoints";
 
 export const Settings = () => {
     const [programSettings, setProgramSettings] = useState({
@@ -20,10 +21,6 @@ export const Settings = () => {
 
     const { title, workTime, restTime, rounds, exercises } = programSettings
 
-    useEffect(() => {
-        console.log(programSettings, "Изменение")
-    }, [programSettings])
-
     const handleAddExercise = () => {
         setProgramSettings((prevSettings) => ({
             ...prevSettings,
@@ -32,14 +29,16 @@ export const Settings = () => {
     }
 
     const handleDeleteExercise = (index: number) => {
-        if (exercises.length > 1) {
-            const updatedExercises = [...exercises]
-            updatedExercises.splice(index, 1)
-            setProgramSettings((prevSettings) => ({
-                ...prevSettings,
-                exercises: updatedExercises
-            }))
+        if (index === 0 || exercises.length <= 1) {
+            return
         }
+
+        const updatedExercises = [...exercises]
+        updatedExercises.splice(index, 1)
+        setProgramSettings((prevSettings) => ({
+            ...prevSettings,
+            exercises: updatedExercises
+        }))
     }
 
     const handleExerciseChange = (event: React.ChangeEvent<HTMLInputElement>, index: number) => {
@@ -59,61 +58,82 @@ export const Settings = () => {
     }
 
     const handleWorkoutTimeAdd = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const newWorkTime = event.target.value
+
+        if (newWorkTime == "0") {
+            return
+        }
+
         setProgramSettings((prevSettings) => ({
             ...prevSettings,
-            workTime: event.target.value,
+            workTime: newWorkTime,
         }))
     }
 
     const handleRestTimeAdd = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const newRestTime = event.target.value
+
+        if (newRestTime == "0") {
+            return
+        }
+
         setProgramSettings((prevSettings) => ({
             ...prevSettings,
-            restTime: event.target.value,
+            restTime: newRestTime,
         }))
     }
 
     const handleRoundsAdd = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const newRounds = event.target.value
+
+        if (newRounds == "0") {
+            return
+        }
+
         setProgramSettings((prevSettings) => ({
             ...prevSettings,
-            rounds: event.target.value,
+            rounds: newRounds,
         }))
     }
 
-    const savedProgram = useTabataProgram("http://localhost:3002/api/tabata/add", "POST");
+    const savedProgram = useTabataProgram(TABATA_ADD_ENDPOINT, "POST")
+
     const onSave = async (e: React.MouseEvent<HTMLButtonElement>) => {
-        e.preventDefault();
+        e.preventDefault()
         await savedProgram({
             title: title,
             rounds: rounds,
             exercises: exercises,
             workTime: workTime,
             restTime: restTime,
-        });
+        })
         setProgramSettings({
             title: "",
             rounds: "",
             workTime: "",
             restTime: "",
             exercises: [""],
-        });
+        })
         setShowSuccessModal(true)
 
         setTimeout(() => {
             setShowSuccessModal(false)
-        }, 1200);
-    };
+        }, 1200)
+    }
 
-    const disabled = !title || !rounds || !workTime || !restTime || exercises.some((exercise) => exercise.trim() === "")
+    const hasEmptyExercises = exercises.some((exercise) => !exercise.trim())
+
+    const disabled = !title || !rounds || !workTime || !restTime || hasEmptyExercises
 
     return (
         <Box>
             <Typo>Settings:</Typo>
             <br />
             <Small>Time should be in seconds, ex: 1 min = 60s.</Small>
-            <Input label={"Program name:"} type={"text"} value={title} onChange={handleTitleAdd} />
-            <Input label={"Workout Time:"} type={"number"} value={workTime} onChange={handleWorkoutTimeAdd} />
-            <Input label={"Rest Time:"} type={"number"} value={restTime} onChange={handleRestTimeAdd} />
-            <Input label={"Rounds:"} type={'number'} value={rounds} onChange={handleRoundsAdd} />
+            <Input label="Program name:" type="text" value={title} onChange={handleTitleAdd}  />
+            <Input label="Workout Time:" type="number" value={workTime} onChange={handleWorkoutTimeAdd} />
+            <Input label="Rest Time:" type="number" value={restTime} onChange={handleRestTimeAdd} />
+            <Input label="Rounds:" type="number" value={rounds} onChange={handleRoundsAdd} />
             <Button onClick={onSave} disabled={disabled}>SAVE PROGRAM</Button>
             {showSuccessModal && <Modal>Program has been successfully saved!</Modal>}
             <Typo>Exercises:</Typo>

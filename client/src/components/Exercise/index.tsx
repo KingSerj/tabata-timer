@@ -1,16 +1,13 @@
 import React from "react"
 import * as SC from "./styles"
-import {ExerciseProps} from "./ExerciseProps";
+import { ExerciseProps } from "./ExerciseProps";
 
-export const Exercise = ({ index, value, onChange, onClick, onDragStart, onDragOver, onDrop }: ExerciseProps) => {
-
-    return (
-        <SC.InputContainer>
-            <SC.ExerciseText draggable onDragStart={onDragStart} onDragOver={onDragOver} onDrop={onDrop}>Exercise {index}:</SC.ExerciseText>
-            <SC.InputWrapper>
-                <SC.ExerciseInput value={value} onChange={onChange}/>
-                <SC.DeleteButton onClick={onClick}>Delete</SC.DeleteButton>
-            </SC.InputWrapper>
-        </SC.InputContainer>
-    )
-}
+export const Exercise = ({ index, value, onChange, onClick, onDragStart, onDragOver, onDrop }: ExerciseProps) => (
+    <SC.InputContainer>
+        <SC.ExerciseText draggable onDragStart={onDragStart} onDragOver={onDragOver} onDrop={onDrop}>Exercise {index}:</SC.ExerciseText>
+        <SC.InputWrapper>
+            <SC.ExerciseInput value={value} onChange={onChange}/>
+            <SC.DeleteButton onClick={onClick}>Delete</SC.DeleteButton>
+        </SC.InputWrapper>
+    </SC.InputContainer>
+)

@@ -1,22 +1,23 @@
-import React, {useCallback, useEffect, useState} from "react";
-import {Box} from "../../components/ui/Box";
-import {Program} from "../../components/commons/interfaces/ProgramProps";
-import {SelectInput} from "../../components/ui/SelectInput";
-import {useGetProgramList} from "../../hooks/useGetProgramList";
-import {useTabataProgram} from "../../hooks/useTabataProgram";
-import {Countdown} from "../../components/Timer/Countdown/styles";
-import {TimerButton} from "../../components/Timer/TimerButton";
-import {ExerciseBox} from "../../components/Timer/ExerciseBox";
-import {Medium} from "../../components/ui/Texts/Medium";
-import {Large} from "../../components/ui/Texts/Large";
+import React, { useCallback, useEffect, useState, useRef } from "react";
+import { Box } from "../../components/ui/Box";
+import { Program } from "../../components/commons/interfaces/ProgramProps";
+import { SelectInput } from "../../components/ui/SelectInput";
+import { useGetProgramList } from "../../hooks/useGetProgramList";
+import { useTabataProgram } from "../../hooks/useTabataProgram";
+import { Countdown } from "../../components/Timer/Countdown/styles";
+import { TimerButton } from "../../components/Timer/TimerButton";
+import { ExerciseBox } from "../../components/Timer/ExerciseBox";
+import { Medium } from "../../components/ui/Texts/Medium";
+import { Large } from "../../components/ui/Texts/Large";
 import { AiOutlinePlayCircle } from "react-icons/ai";
 import { AiOutlinePause } from "react-icons/ai";
-import {Small} from "../../components/ui/Texts/Small";
-import {Modal} from "../../components/ui/Modal";
-// @ts-ignore
-import countdown from "../../assets/countdown.wav";
-// @ts-ignore
+import { Small } from "../../components/ui/Texts/Small";
+import { Modal } from "../../components/ui/Modal";
+import startSound from "../../assets/start.wav";
 import endSound from "../../assets/end.mp3";
+import { TABATA_SETTINGS_ENDPOINT } from "../../api/endpoints";
+
+const REST = "Rest"
 
 export const Timer = () => {
     const [programList, setProgramList] = useState<Program[]>([])
@@ -32,7 +33,10 @@ export const Timer = () => {
     const [isInputDisabled, setIsInputDisabled] = useState(false)
 
     const getProgramList = useGetProgramList()
-    const getProgramSettings = useTabataProgram("http://localhost:3002/api/tabata/settings", "POST")
+    const getProgramSettings = useTabataProgram(TABATA_SETTINGS_ENDPOINT, "POST")
+
+    const startSoundRef = useRef<HTMLAudioElement>(null)
+    const finishSoundRef = useRef<HTMLAudioElement>(null)
 
     const updateProgramList = useCallback(() => {
         getProgramList().then((result) => {
@@ -63,74 +67,80 @@ export const Timer = () => {
         setResetKey((prevKey) => prevKey + 1)
     }
 
-    const generateNewExercises = () => {
+    const generateNewExercises = useCallback(() => {
         if (selectedProgram && selectedProgram.exercises) {
-            const updatedRestExercises = selectedProgram.exercises.reduce((acc: Array<string>, exercise: string, index: number) => {
+            const updatedRestExercises = selectedProgram.exercises.reduce((acc: Array<string>, exercise: string) => {
                 acc.push(exercise)
 
-                if (index !== selectedProgram.exercises.length - 1) {
-                    acc.push("Rest")
-                }
-
-                if (index === selectedProgram.exercises.length - 1) {
-                    acc.push("Rest")
-                }
+                acc.push(REST)
 
                 return acc
             }, [])
             setRestExercises(updatedRestExercises)
         }
-    }
+    }, [selectedProgram?.exercises])
 
     useEffect(() => {
         generateNewExercises()
     }, [selectedProgram])
 
     useEffect(() => {
-        const interval = setInterval(() => {
-            if (isTimerCounting) {
-                if (timer > 0) {
-                    setTimer((prevTimer) => prevTimer - 1)
-                    setIsInputDisabled(true)
-                } else if (timer === 0 && currentExerciseIndex < restExercises.length - 1) {
-                    setCurrentExerciseIndex((prevIndex) => prevIndex + 1)
-                    if (restExercises[currentExerciseIndex + 1] === "Rest") {
-                        setTimer(selectedProgram?.restTime || 0)
-                    } else {
-                        setTimer(selectedProgram?.workTime || 0)
-                    }
-                } else if (timer === 0 && currentExerciseIndex === restExercises.length - 1) {
-                    if (currentRound < (selectedProgram?.rounds || 0)) {
-                        setIsTimerCounting(false)
-                        setTimer(selectedProgram?.workTime || 0)
-                        setCurrentRound((prevRound) => prevRound + 1)
-                        setCurrentExerciseIndex(0)
-                        generateNewExercises()
-                        playStartSound()
-                        setIsStartSoundPlaying(true)
-                        setTimeout(() => {
-                            setIsTimerCounting(true)
-                            setIsStartSoundPlaying(false)
-                        }, 3000)
-                    } else {
-                        setIsTimerCounting(false)
-                        setShowSuccessModal(true)
-                        playFinishSound()
-                        setIsStartSoundPlaying(false)
-                        setTimeout(() => {
-                            setSelectedProgram(null)
-                            handleResetSelect()
-                            setIsInputDisabled(false)
-                            setShowSuccessModal(false)
-                        }, 2500)
-                    }
-                }
+        const startWork = () => {
+            if (!isTimerCounting) {
+                return
             }
+
+            if (timer > 0) {
+                setTimer((prevTimer) => prevTimer - 1)
+                setIsInputDisabled(true)
+
+                return
+            }
+
+            if (timer !== 0) {
+                return
+            }
+
+            if (currentExerciseIndex < restExercises.length - 1) {
+                setCurrentExerciseIndex((prevIndex) => prevIndex + 1)
+
+                let time = selectedProgram?.workTime || 0
+
+                if (restExercises[currentExerciseIndex + 1] === REST) {
+                    time = selectedProgram?.restTime || 0
+                }
+
+                setTimer(time)
+                return
+            }
+
+            if (currentExerciseIndex !== restExercises.length - 1) {
+                return
+            }
+
+            if (currentRound < (selectedProgram?.rounds || 0)) {
+                setIsTimerCounting(false)
+                setTimer(selectedProgram?.workTime || 0)
+                setCurrentRound((prevRound) => prevRound + 1)
+                setCurrentExerciseIndex(0)
+                playStartSound()
+                setIsStartSoundPlaying(true)
+
+                return
+            }
+
+            setIsTimerCounting(false)
+            setShowSuccessModal(true)
+            playFinishSound()
+            setIsStartSoundPlaying(false)
+        }
+        const interval = setInterval(() => {
+            startWork()
         }, 1000)
 
         return () => {
             clearInterval(interval)
-        };
+        }
     }, [isTimerCounting, timer, currentExerciseIndex, restExercises, selectedProgram, currentRound])
 
     const handlePlay = () => {
@@ -138,10 +148,6 @@ export const Timer = () => {
             setIsStartSoundPlaying(true)
             playStartSound()
             setIsInputDisabled(true)
-            setTimeout(() => {
-                setIsTimerCounting(true)
-                setIsStartSoundPlaying(false)
-            }, 3150)
         }
     }
 
@@ -149,27 +155,39 @@ export const Timer = () => {
         setIsTimerCounting(false)
         setIsInputDisabled(false)
         setIsStartSoundPlaying(false)
-    };
+    }
 
     const playStartSound = () => {
-        new Audio(countdown).play()
+        startSoundRef.current?.play()
     }
 
     const playFinishSound = () => {
-        new Audio(endSound).play()
+        finishSoundRef.current?.play()
+    }
+
+    const handleStartSoundEnded = () => {
+        setIsTimerCounting(true)
+        setIsStartSoundPlaying(false)
+    }
+
+    const handleFinishSoundEnded = () => {
+        setSelectedProgram(null)
+        handleResetSelect()
+        setIsInputDisabled(false)
+        setShowSuccessModal(false)
     }
 
     return (
         <Box>
             <SelectInput
                 options={options}
-                placeholder={"Choose program..."}
+                placeholder="Choose program..."
                 onChange={chosenProgram}
                 isDisabled={isInputDisabled}
                 key={resetKey}
             />
             {showSuccessModal && <Modal>Congratulations on a successful workout!</Modal>}
-            {selectedProgram ? (
+            {selectedProgram && (
                 <>
                     <Countdown>{timer.toString().padStart(2, "0")}s</Countdown>
                     {isTimerCounting ? (
@@ -194,7 +212,9 @@ export const Timer = () => {
                         <ExerciseBox key={index}>{exercise}</ExerciseBox>
                     ))}
                 </>
-            ):null}
+            )}
+            <audio ref={startSoundRef} src={startSound} onEnded={handleStartSoundEnded} />
+            <audio ref={finishSoundRef} src={endSound} onEnded={handleFinishSoundEnded} />
         </Box>
     )
 }

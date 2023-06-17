@@ -1,8 +1,8 @@
 import React from 'react';
-import {render, screen, fireEvent} from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { Root } from './components/Root';
-import {Settings} from "./pages/Settings";
+import { Settings } from "./pages/Settings";
 
 describe("Успешные рендеры", () => {
     test("Успешный рендер компонента Root", () => {

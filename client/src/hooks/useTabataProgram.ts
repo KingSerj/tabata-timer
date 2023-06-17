@@ -1,7 +1,7 @@
 import {useCallback} from "react";
 
-export const useTabataProgram = (url, method) => {
-    return useCallback(async (body) => {
+export const useTabataProgram = (url: string, method: string) => {
+    return useCallback(async (body: any) => {
         try {
             const res = await fetch(url, {
                 method: method,
