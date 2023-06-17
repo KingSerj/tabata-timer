@@ -1,16 +1,17 @@
-import React, {useState, useCallback, useEffect} from "react";
-import {Box} from "../../components/ui/Box";
-import {SelectInput} from "../../components/ui/SelectInput";
-import {useGetProgramList} from "../../hooks/useGetProgramList";
-import {useTabataProgram} from "../../hooks/useTabataProgram";
-import {Input} from "../../components/ui/Input";
-import {Typo} from "../../components/ui/Texts/Typo";
-import {Button} from "../../components/ui/Button";
-import {Exercise} from "../../components/Exercise";
-import {Modal} from "../../components/ui/Modal";
-import {NoButton, YesButton} from "../../components/ui/Modal/ModalButton/styles";
-import {Small} from "../../components/ui/Texts/Small";
-import {Program} from "../../components/commons/interfaces/ProgramProps";
+import React, { useState, useCallback, useEffect } from "react";
+import { Box } from "../../components/ui/Box";
+import { SelectInput } from "../../components/ui/SelectInput";
+import { useGetProgramList } from "../../hooks/useGetProgramList";
+import { useTabataProgram } from "../../hooks/useTabataProgram";
+import { Input } from "../../components/ui/Input";
+import { Typo } from "../../components/ui/Texts/Typo";
+import { Button } from "../../components/ui/Button";
+import { Exercise } from "../../components/Exercise";
+import { Modal } from "../../components/ui/Modal";
+import { NoButton, YesButton } from "../../components/ui/Modal/ModalButton/styles";
+import { Small } from "../../components/ui/Texts/Small";
+import { Program } from "../../components/commons/interfaces/ProgramProps";
+import { TABATA_EDIT_ENDPOINT, TABATA_SETTINGS_ENDPOINT, TABATA_DELETE_ENDPOINT } from "../../api/endpoints";
 
 export const Programs = () => {
     const [programList, setProgramList] = useState<Program[]>([])
@@ -21,11 +22,26 @@ export const Programs = () => {
     const [showSuccessUpdateModal, setSuccessUpdateModal] = useState(false)
     const [resetKey, setResetKey] = useState(0)
 
-
     const getProgramList = useGetProgramList()
-    const getProgramSettings = useTabataProgram("http://localhost:3002/api/tabata/settings", "POST")
-    const deleteProgramSettings = useTabataProgram("http://localhost:3002/api/tabata/delete", "DELETE")
-    const updateProgramSettings = useTabataProgram("http://localhost:3002/api/tabata/edit", "PUT")
+    const getProgramSettings = useTabataProgram(TABATA_SETTINGS_ENDPOINT, "POST")
+    const deleteProgramSettings = useTabataProgram(TABATA_DELETE_ENDPOINT, "DELETE")
+    const updateProgramSettings = useTabataProgram(TABATA_EDIT_ENDPOINT, "PUT")
+
+    const { title, workTime, restTime, rounds, exercises } = selectedProgram || {}
+
+    useEffect(() => {
+        getProgramList().then((result) => {
+            setProgramList(result)
+        })
+    }, [])
+
+    useEffect(() => {
+        if (selectedProgram && selectedProgram.value) {
+            getProgramSettings({ _id: selectedProgram.value }).then((result) => {
+                setSelectedProgram(result)
+            })
+        }
+    }, [selectedProgram])
 
     const updateProgramList = useCallback(() => {
         getProgramList().then((result) => {
@@ -34,8 +50,10 @@ export const Programs = () => {
     }, [getProgramList])
 
     useEffect(() => {
-        updateProgramList()
-    }, [updateProgramList])
+        if (showSuccessDeleteModal || showSuccessUpdateModal) {
+            updateProgramList()
+        }
+    }, [showSuccessDeleteModal, showSuccessUpdateModal, updateProgramList])
 
     const options = programList.map((program) => ({
         label: program.title,
@@ -57,15 +75,33 @@ export const Programs = () => {
     }
 
     const updatedWorkTime = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSelectedProgram({...selectedProgram, workTime: event.target.value})
+        const newWorkTime = event.target.value
+
+        if (newWorkTime == "0") {
+            return
+        }
+
+        setSelectedProgram({...selectedProgram, workTime: newWorkTime})
     }
 
     const updatedRestTime = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSelectedProgram({...selectedProgram, restTime: event.target.value})
+        const newRestTime = event.target.value
+
+        if (newRestTime == "0") {
+            return
+        }
+
+        setSelectedProgram({...selectedProgram, restTime: newRestTime})
     }
 
     const updatedRounds = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSelectedProgram({...selectedProgram, rounds: event.target.value})
+        const newRounds = event.target.value
+
+        if (newRounds == "0") {
+            return
+        }
+
+        setSelectedProgram({...selectedProgram, rounds: newRounds})
     }
 
     const updatedChangeExercises = (event: React.ChangeEvent<HTMLInputElement>, index: number) => {
@@ -75,11 +111,13 @@ export const Programs = () => {
     }
 
     const updatedDeleteExercises = (index: number) => {
-        if (selectedProgram.exercises.length > 1) {
-            const newExercises = [...selectedProgram.exercises]
-            newExercises.splice(index, 1)
-            setSelectedProgram({...selectedProgram, exercises: newExercises})
+        if (index === 0 || selectedProgram.exercises.length <= 1 ) {
+            return
         }
+
+        const newExercises = [...selectedProgram.exercises]
+        newExercises.splice(index, 1)
+        setSelectedProgram({...selectedProgram, exercises: newExercises})
     }
 
     const updatedAddExercises = () => {
@@ -92,8 +130,8 @@ export const Programs = () => {
             _id: selectedProgram._id
         })
         await updateProgramList()
-        await setShowDeleteModal(false)
-        await setSuccessDeleteModal(true)
+        setShowDeleteModal(false)
+        setSuccessDeleteModal(true)
         setTimeout(() => {
             setSuccessDeleteModal(false)
             setSelectedProgram(null)
@@ -111,9 +149,8 @@ export const Programs = () => {
             restTime: selectedProgram.restTime,
             exercises: selectedProgram.exercises
         })
-        await updateProgramList()
-        await setShowUpdateModal(false)
-        await setSuccessUpdateModal(true)
+        setShowUpdateModal(false)
+        setSuccessUpdateModal(true)
         setTimeout(() => {
             setSuccessUpdateModal(false)
             setSelectedProgram(null)
@@ -137,23 +174,25 @@ export const Programs = () => {
         setSelectedProgram({...selectedProgram, exercises: newExerciseList})
     }
 
+    const disabled = !selectedProgram || !selectedProgram.title || !selectedProgram.workTime || !selectedProgram.restTime || !selectedProgram.rounds || selectedProgram.exercises.some((exercise:string) => exercise.trim() === "")
+
     return (
         <Box>
             <SelectInput
                 key={resetKey}
                 options={options}
-                placeholder={"Choose program..."}
+                placeholder="Choose program..."
                 onChange={chosenProgram}
             />
             <br/>
             {selectedProgram &&
                 <>
                     <Typo>Settings:</Typo>
-                    <Input label={"Program name:"} type={"text"} value={selectedProgram.title} onChange={updatedTitle}/>
-                    <Input label={"Workout Time:"} type={"number"} value={selectedProgram.workTime} onChange={updatedWorkTime} />
-                    <Input label={"Rest Time:"} type={"number"} value={selectedProgram.restTime} onChange={updatedRestTime} />
-                    <Input label={"Rounds:"} type={'number'} value={selectedProgram.rounds} onChange={updatedRounds} />
-                    <Button onClick={() => setShowUpdateModal(true)}>UPDATE PROGRAM</Button>
+                    <Input label="Program name:" type="text" value={title} onChange={updatedTitle}/>
+                    <Input label="Workout Time:" type="number" value={workTime} onChange={updatedWorkTime} />
+                    <Input label="Rest Time:" type="number" value={restTime} onChange={updatedRestTime} />
+                    <Input label="Rounds:" type="number" value={rounds} onChange={updatedRounds} />
+                    <Button onClick={() => setShowUpdateModal(true)} disabled={disabled}>UPDATE PROGRAM</Button>
                     {showUpdateModal &&
                         <Modal>
                             Are you sure you want to update this program ?
@@ -175,7 +214,7 @@ export const Programs = () => {
                     <Typo>Exercises:</Typo>
                     <Button onClick={updatedAddExercises}>ADD EXERCISE</Button>
                     <Small>You can change the exercise order by simply dragging the exercise number and releasing it at the desired location.</Small>
-                    {selectedProgram.exercises.map((exercise: string, index: number) => (
+                    {exercises.map((exercise: string, index: number) => (
                         <Exercise
                             key={index}
                             draggable
