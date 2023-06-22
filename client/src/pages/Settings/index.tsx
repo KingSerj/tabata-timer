@@ -3,7 +3,7 @@ import { Box } from "../../components/ui/Box";
 import { Typo } from "../../components/ui/Texts/Typo";
 import { Small } from "../../components/ui/Texts/Small";
 import { Input } from "../../components/ui/Input";
-import { Exercise } from "../../components/Exercise";
+import { Exercise } from "../../components/commons/Exercise";
 import { Button } from "../../components/ui/Button";
 import { useTabataProgram } from "../../hooks/useTabataProgram";
 import { Modal } from "../../components/ui/Modal";
