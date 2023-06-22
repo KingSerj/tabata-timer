@@ -29,7 +29,7 @@ export const Settings = () => {
     }
 
     const handleDeleteExercise = (index: number) => {
-        if (index === 0 || exercises.length <= 1) {
+        if (exercises.length <= 1) {
             return
         }
 
