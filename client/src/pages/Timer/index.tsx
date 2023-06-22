@@ -4,18 +4,11 @@ import { Program } from "../../components/commons/interfaces/ProgramProps";
 import { SelectInput } from "../../components/ui/SelectInput";
 import { useGetProgramList } from "../../hooks/useGetProgramList";
 import { useTabataProgram } from "../../hooks/useTabataProgram";
-import { Countdown } from "../../components/Timer/Countdown/styles";
-import { TimerButton } from "../../components/Timer/TimerButton";
-import { ExerciseBox } from "../../components/Timer/ExerciseBox";
-import { Medium } from "../../components/ui/Texts/Medium";
-import { Large } from "../../components/ui/Texts/Large";
-import { AiOutlinePlayCircle } from "react-icons/ai";
-import { AiOutlinePause } from "react-icons/ai";
-import { Small } from "../../components/ui/Texts/Small";
 import { Modal } from "../../components/ui/Modal";
 import startSound from "../../assets/start.wav";
 import endSound from "../../assets/end.mp3";
 import { TABATA_SETTINGS_ENDPOINT } from "../../api/endpoints";
+import {MainTimer} from "../../components/Timer";
 
 const REST = "Rest"
 
@@ -37,6 +30,8 @@ export const Timer = () => {
 
     const startSoundRef = useRef<HTMLAudioElement>(null)
     const finishSoundRef = useRef<HTMLAudioElement>(null)
+
+    const { workTime, restTime, rounds, exercises } = selectedProgram || {}
 
     const updateProgramList = useCallback(() => {
         getProgramList().then((result) => {
@@ -68,8 +63,8 @@ export const Timer = () => {
     }
 
     const generateNewExercises = useCallback(() => {
-        if (selectedProgram && selectedProgram.exercises) {
-            const updatedRestExercises = selectedProgram.exercises.reduce((acc: Array<string>, exercise: string) => {
+        if (exercises) {
+            const updatedRestExercises = exercises.reduce((acc: Array<string>, exercise: string) => {
                 acc.push(exercise)
 
                 acc.push(REST)
@@ -78,7 +73,7 @@ export const Timer = () => {
             }, [])
             setRestExercises(updatedRestExercises)
         }
-    }, [selectedProgram?.exercises])
+    }, [exercises])
 
     useEffect(() => {
         generateNewExercises()
@@ -104,10 +99,10 @@ export const Timer = () => {
             if (currentExerciseIndex < restExercises.length - 1) {
                 setCurrentExerciseIndex((prevIndex) => prevIndex + 1)
 
-                let time = selectedProgram?.workTime || 0
+                let time = workTime || 0
 
                 if (restExercises[currentExerciseIndex + 1] === REST) {
-                    time = selectedProgram?.restTime || 0
+                    time = restTime || 0
                 }
 
                 setTimer(time)
@@ -118,9 +113,9 @@ export const Timer = () => {
                 return
             }
 
-            if (currentRound < (selectedProgram?.rounds || 0)) {
+            if (currentRound < (rounds || 0)) {
                 setIsTimerCounting(false)
-                setTimer(selectedProgram?.workTime || 0)
+                setTimer(workTime || 0)
                 setCurrentRound((prevRound) => prevRound + 1)
                 setCurrentExerciseIndex(0)
                 playStartSound()
@@ -177,42 +172,23 @@ export const Timer = () => {
         setShowSuccessModal(false)
     }
 
+    const timerProps = {
+        timer,
+        isTimerCounting,
+        handlePlay,
+        handlePause,
+        isStartSoundPlaying,
+        currentRound,
+        rounds,
+        restExercises,
+        currentExerciseIndex
+    }
+
     return (
         <Box>
-            <SelectInput
-                options={options}
-                placeholder="Choose program..."
-                onChange={chosenProgram}
-                isDisabled={isInputDisabled}
-                key={resetKey}
-            />
+            <SelectInput options={options} placeholder="Choose program..." onChange={chosenProgram} isDisabled={isInputDisabled} key={resetKey}/>
             {showSuccessModal && <Modal>Congratulations on a successful workout!</Modal>}
-            {selectedProgram && (
-                <>
-                    <Countdown>{timer.toString().padStart(2, "0")}s</Countdown>
-                    {isTimerCounting ? (
-                        <TimerButton onClick={handlePause}>
-                            <AiOutlinePause/>
-                        </TimerButton>
-                    ) : (
-                        <TimerButton onClick={handlePlay} disabled={isStartSoundPlaying}>
-                            <AiOutlinePlayCircle/>
-                        </TimerButton>
-                    )}
-                    {isStartSoundPlaying && (
-                        <Small>You can't change the program or pause it once the timer is about to start.</Small>
-                    )}
-                    {isTimerCounting && (
-                        <Small>You can't change the program while the timer is running.</Small>
-                    )}
-                    <Medium>CURRENT EXERCISE | ROUND {currentRound}/{selectedProgram.rounds}</Medium>
-                    <Large>{restExercises[currentExerciseIndex]}</Large>
-                    <Medium>UP NEXT</Medium>
-                    {restExercises.slice(currentExerciseIndex + 1).map((exercise, index) => (
-                        <ExerciseBox key={index}>{exercise}</ExerciseBox>
-                    ))}
-                </>
-            )}
+            {selectedProgram && <MainTimer timerProps={timerProps}/>}
             <audio ref={startSoundRef} src={startSound} onEnded={handleStartSoundEnded} />
             <audio ref={finishSoundRef} src={endSound} onEnded={handleFinishSoundEnded} />
         </Box>

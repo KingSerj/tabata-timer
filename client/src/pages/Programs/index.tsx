@@ -3,15 +3,9 @@ import { Box } from "../../components/ui/Box";
 import { SelectInput } from "../../components/ui/SelectInput";
 import { useGetProgramList } from "../../hooks/useGetProgramList";
 import { useTabataProgram } from "../../hooks/useTabataProgram";
-import { Input } from "../../components/ui/Input";
-import { Typo } from "../../components/ui/Texts/Typo";
-import { Button } from "../../components/ui/Button";
-import { Exercise } from "../../components/Exercise";
-import { Modal } from "../../components/ui/Modal";
-import { NoButton, YesButton } from "../../components/ui/Modal/ModalButton/styles";
-import { Small } from "../../components/ui/Texts/Small";
 import { Program } from "../../components/commons/interfaces/ProgramProps";
 import { TABATA_EDIT_ENDPOINT, TABATA_SETTINGS_ENDPOINT, TABATA_DELETE_ENDPOINT } from "../../api/endpoints";
+import {MainProgram} from "../../components/Program";
 
 export const Programs = () => {
     const [programList, setProgramList] = useState<Program[]>([])
@@ -27,7 +21,7 @@ export const Programs = () => {
     const deleteProgramSettings = useTabataProgram(TABATA_DELETE_ENDPOINT, "DELETE")
     const updateProgramSettings = useTabataProgram(TABATA_EDIT_ENDPOINT, "PUT")
 
-    const { title, workTime, restTime, rounds, exercises } = selectedProgram || {}
+    const { title, workTime, restTime, rounds, exercises, _id } = selectedProgram || {}
 
     useEffect(() => {
         getProgramList().then((result) => {
@@ -127,7 +121,7 @@ export const Programs = () => {
     const onDelete = async (event: React.FormEvent<HTMLButtonElement>) => {
         event.preventDefault()
         await deleteProgramSettings({
-            _id: selectedProgram._id
+            _id: _id
         })
         await updateProgramList()
         setShowDeleteModal(false)
@@ -142,12 +136,12 @@ export const Programs = () => {
     const onUpdate = async (event: React.FormEvent<HTMLButtonElement>) => {
         event.preventDefault()
         await updateProgramSettings({
-            _id: selectedProgram._id,
-            title: selectedProgram.title,
-            rounds: selectedProgram.rounds,
-            workTime: selectedProgram.workTime,
-            restTime: selectedProgram.restTime,
-            exercises: selectedProgram.exercises
+            _id: _id,
+            title: title,
+            rounds: rounds,
+            workTime: workTime,
+            restTime: restTime,
+            exercises: exercises
         })
         setShowUpdateModal(false)
         setSuccessUpdateModal(true)
@@ -174,61 +168,13 @@ export const Programs = () => {
         setSelectedProgram({...selectedProgram, exercises: newExerciseList})
     }
 
-    const disabled = !selectedProgram || !selectedProgram.title || !selectedProgram.workTime || !selectedProgram.restTime || !selectedProgram.rounds || selectedProgram.exercises.some((exercise:string) => exercise.trim() === "")
+    const mainProgram = {title, workTime, restTime, rounds, exercises, onUpdate, onDelete, handleDragOver, handleDrop, handleDragStart, setShowUpdateModal, showUpdateModal, setShowDeleteModal, showSuccessUpdateModal, showDeleteModal, showSuccessDeleteModal, updatedTitle, updatedWorkTime, updatedRestTime, updatedRounds, updatedAddExercises, updatedChangeExercises, updatedDeleteExercises}
 
     return (
         <Box>
-            <SelectInput
-                key={resetKey}
-                options={options}
-                placeholder="Choose program..."
-                onChange={chosenProgram}
-            />
+            <SelectInput key={resetKey} options={options} placeholder="Choose program..." onChange={chosenProgram}/>
             <br/>
-            {selectedProgram &&
-                <>
-                    <Typo>Settings:</Typo>
-                    <Input label="Program name:" type="text" value={title} onChange={updatedTitle}/>
-                    <Input label="Workout Time:" type="number" value={workTime} onChange={updatedWorkTime} />
-                    <Input label="Rest Time:" type="number" value={restTime} onChange={updatedRestTime} />
-                    <Input label="Rounds:" type="number" value={rounds} onChange={updatedRounds} />
-                    <Button onClick={() => setShowUpdateModal(true)} disabled={disabled}>UPDATE PROGRAM</Button>
-                    {showUpdateModal &&
-                        <Modal>
-                            Are you sure you want to update this program ?
-                            <br/>
-                            <YesButton onClick={onUpdate}>YES</YesButton>
-                            <NoButton onClick={() => setShowUpdateModal(false)}>NO</NoButton>
-                        </Modal>
-                    }
-                    {showSuccessUpdateModal && <Modal>Program has been successfully updated!</Modal>}
-                    <Button onClick={() => setShowDeleteModal(true)}>DELETE PROGRAM</Button>
-                    {showDeleteModal &&
-                        <Modal>
-                            Are you sure you want to delete this program ?
-                            <br/>
-                            <YesButton onClick={onDelete}>YES</YesButton>
-                            <NoButton onClick={() => setShowDeleteModal(false)}>NO</NoButton>
-                        </Modal>}
-                    {showSuccessDeleteModal && <Modal>Program has been successfully deleted!</Modal>}
-                    <Typo>Exercises:</Typo>
-                    <Button onClick={updatedAddExercises}>ADD EXERCISE</Button>
-                    <Small>You can change the exercise order by simply dragging the exercise number and releasing it at the desired location.</Small>
-                    {exercises.map((exercise: string, index: number) => (
-                        <Exercise
-                            key={index}
-                            draggable
-                            index={index + 1}
-                            value={exercise}
-                            onChange={(event) => updatedChangeExercises(event, index)}
-                            onClick={() => updatedDeleteExercises(index)}
-                            onDragStart={(event: React.DragEvent<HTMLDivElement>) => handleDragStart(event, index)}
-                            onDragOver={(event: React.DragEvent<HTMLDivElement>) => handleDragOver(event)}
-                            onDrop={(event: React.DragEvent<HTMLDivElement>) => handleDrop(event, index)}
-                        />
-                    ))}
-                </>
-            }
+            {selectedProgram && <MainProgram mainProgram={mainProgram}/>}
         </Box>
     )
 }
