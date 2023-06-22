@@ -99,23 +99,23 @@ export const Programs = () => {
     }
 
     const updatedChangeExercises = (event: React.ChangeEvent<HTMLInputElement>, index: number) => {
-        const newExercises = [...selectedProgram.exercises]
+        const newExercises = [...exercises]
         newExercises[index] = event.target.value
         setSelectedProgram({...selectedProgram, exercises: newExercises})
     }
 
     const updatedDeleteExercises = (index: number) => {
-        if (index === 0 || selectedProgram.exercises.length <= 1 ) {
+        if (exercises.length <= 1 ) {
             return
         }
 
-        const newExercises = [...selectedProgram.exercises]
+        const newExercises = [...exercises]
         newExercises.splice(index, 1)
         setSelectedProgram({...selectedProgram, exercises: newExercises})
     }
 
     const updatedAddExercises = () => {
-        setSelectedProgram({...selectedProgram, exercises: [...selectedProgram.exercises, ""]})
+        setSelectedProgram({...selectedProgram, exercises: [...exercises, ""]})
     }
 
     const onDelete = async (event: React.FormEvent<HTMLButtonElement>) => {
@@ -162,7 +162,7 @@ export const Programs = () => {
 
     const handleDrop = (event: React.DragEvent<HTMLDivElement>, newIndex: number) => {
         const draggedIndex = parseInt(event.dataTransfer.getData("text/plain"))
-        const newExerciseList = [...selectedProgram.exercises]
+        const newExerciseList = [...exercises]
         const [draggedExercise] = newExerciseList.splice(draggedIndex, 1)
         newExerciseList.splice(newIndex, 0, draggedExercise)
         setSelectedProgram({...selectedProgram, exercises: newExerciseList})
