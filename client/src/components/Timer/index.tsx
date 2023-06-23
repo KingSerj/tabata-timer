@@ -1,7 +1,7 @@
+import React from "react";
 import { Countdown } from "./Countdown"
 import { TimerButton } from "./TimerButton";
 import { AiOutlinePause, AiOutlinePlayCircle } from "react-icons/ai";
-import React from "react";
 import { Small } from "../ui/Texts/Small";
 import { Medium } from "../ui/Texts/Medium";
 import { Large } from "../ui/Texts/Large";
