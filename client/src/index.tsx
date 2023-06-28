@@ -6,7 +6,7 @@ import reportWebVitals from './reportWebVitals';
 import {Timer} from "./pages/Timer";
 import {Settings} from "./pages/Settings";
 import {Programs} from "./pages/Programs";
-import {Root} from "./components/Root";
+import {Root} from "./modules/Root";
 import {About} from "./pages/About";
 
 import './index.css';

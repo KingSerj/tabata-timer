@@ -1,9 +1,10 @@
 import styled from "styled-components";
+import {theme} from "../../../theme/theme";
 
 export const Button = styled.button`
   margin: 10px 10px 10px 0;
   font-family: "Montserrat", sans-serif;
-  background-color: #8b00ff;
+  background-color: ${theme.buttonMainColor};
   color: #fff;
   border: none;
   border-radius: 4px;
@@ -15,15 +16,15 @@ export const Button = styled.button`
   width: 180px;
 
   &:hover {
-    background-color: #6300a7;
+    background-color: ${theme.buttonHover};
   }
 
   &:active {
-    background-color: #4a0080;
+    background-color: ${theme.buttonActive};
   }
   
   :disabled {
-    background-color: grey;
+    background-color: ${theme.buttonDisabled};
   }
   
 `

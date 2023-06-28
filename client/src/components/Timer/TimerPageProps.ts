@@ -1,4 +1,4 @@
-export interface TimerPageProps {
+export interface ITimerPageProps {
     timer: number
     isTimerCounting: boolean
     handlePause: () => void

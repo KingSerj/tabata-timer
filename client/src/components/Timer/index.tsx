@@ -6,12 +6,12 @@ import { Small } from "../ui/Texts/Small";
 import { Medium } from "../ui/Texts/Medium";
 import { Large } from "../ui/Texts/Large";
 import { TimerExerciseBox } from "./TimerExerciseBox";
-import { TimerPageProps } from "./TimerPageProps";
+import { ITimerPageProps } from "./TimerPageProps";
 
 
-export const MainTimer = ({timerProps}: { timerProps: TimerPageProps }) => {
+export const MainTimer = ({timerProps}: { timerProps: ITimerPageProps }) => {
 
-    const { timer, isTimerCounting, handlePause, handlePlay, isStartSoundPlaying, currentRound, rounds, restExercises, currentExerciseIndex } = timerProps
+    const { timer, isTimerCounting, handlePause, handlePlay, isStartSoundPlaying, currentRound, rounds, restExercises = [], currentExerciseIndex } = timerProps
 
     return (
         <div>

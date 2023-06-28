@@ -1,5 +1,5 @@
 import React from "react";
 import * as SC from "./styles"
-import { UIProps } from "../../../commons/interfaces/UIProps";
+import { IUIProps } from "../../../commons/interfaces/UIProps";
 
-export const Medium = ({children}: UIProps) => <SC.Medium>{children}</SC.Medium>
+export const Medium = ({children}: IUIProps) => <SC.Medium>{children}</SC.Medium>

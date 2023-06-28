@@ -1,9 +1,10 @@
 import styled from "styled-components";
+import {theme} from "../../../../theme/theme";
 
 export const ModalButton = styled.button`
   margin: 10px 10px 10px 0;
   font-family: "Montserrat", sans-serif;
-  background-color: #8b00ff;
+  background-color: ${theme.buttonMainColor};
   color: #fff;
   border: none;
   border-radius: 4px;
@@ -16,22 +17,22 @@ export const ModalButton = styled.button`
 `
 
 export const YesButton = styled(ModalButton)`
-  background-color: #55c57a;
+  background-color: ${theme.buttonConfirm};
   color: #fff;
   border: none;
   margin-right: 10px;
 
   &:hover {
-    background-color: #2e9b56
+    background-color: ${theme.buttonConfirmHover}
   }
 `
 
 export const NoButton = styled(ModalButton)`
-  background-color: #e76b6b;
+  background-color: ${theme.buttonCancel};
   color: #fff;
   border: none;
 
   &:hover {
-    background-color: #c04444
+    background-color: ${theme.buttonCancelHover}
   }
 `

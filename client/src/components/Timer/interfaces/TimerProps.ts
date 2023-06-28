@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 
-export interface TimerProps {
+export interface ITimerProps {
     children?: ReactNode
     onClick?: () => void
     disabled?: boolean

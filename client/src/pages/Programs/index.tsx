@@ -1,20 +1,20 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, {useState, useCallback, useEffect, useMemo} from "react";
 import { Box } from "../../components/ui/Box";
 import { SelectInput } from "../../components/ui/SelectInput";
 import { useGetProgramList } from "../../hooks/useGetProgramList";
 import { useTabataProgram } from "../../hooks/useTabataProgram";
-import { Program } from "../../components/commons/interfaces/ProgramProps";
+import { MainProgram } from "../../components/Program";
+import { IProgramProps } from "../../components/commons/interfaces/ProgramProps";
 import { TABATA_EDIT_ENDPOINT, TABATA_SETTINGS_ENDPOINT, TABATA_DELETE_ENDPOINT } from "../../api/endpoints";
-import {MainProgram} from "../../components/Program";
 
 export const Programs = () => {
-    const [programList, setProgramList] = useState<Program[]>([])
-    const [selectedProgram, setSelectedProgram] = useState<any>()
-    const [showDeleteModal, setShowDeleteModal] = useState(false)
-    const [showUpdateModal, setShowUpdateModal] = useState(false)
-    const [showSuccessDeleteModal, setSuccessDeleteModal] = useState(false)
-    const [showSuccessUpdateModal, setSuccessUpdateModal] = useState(false)
-    const [resetKey, setResetKey] = useState(0)
+    const [programList, setProgramList] = useState<IProgramProps[]>([])
+    const [selectedProgram, setSelectedProgram] = useState<IProgramProps>()
+    const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false)
+    const [showUpdateModal, setShowUpdateModal] = useState<boolean>(false)
+    const [showSuccessDeleteModal, setSuccessDeleteModal] = useState<boolean>(false)
+    const [showSuccessUpdateModal, setSuccessUpdateModal] = useState<boolean>(false)
+    const [resetKey, setResetKey] = useState<number>(0)
 
     const getProgramList = useGetProgramList()
     const getProgramSettings = useTabataProgram(TABATA_SETTINGS_ENDPOINT, "POST")
@@ -24,21 +24,21 @@ export const Programs = () => {
     const { title, workTime, restTime, rounds, exercises, _id } = selectedProgram || {}
 
     useEffect(() => {
-        getProgramList().then((result) => {
+        getProgramList().then((result: IProgramProps[]) => {
             setProgramList(result)
         })
     }, [])
 
     useEffect(() => {
         if (selectedProgram && selectedProgram.value) {
-            getProgramSettings({ _id: selectedProgram.value }).then((result) => {
+            getProgramSettings({ _id: selectedProgram.value }).then((result: IProgramProps) => {
                 setSelectedProgram(result)
             })
         }
     }, [selectedProgram])
 
     const updateProgramList = useCallback(() => {
-        getProgramList().then((result) => {
+        getProgramList().then((result: IProgramProps[]) => {
             setProgramList(result)
         })
     }, [getProgramList])
@@ -49,17 +49,19 @@ export const Programs = () => {
         }
     }, [showSuccessDeleteModal, showSuccessUpdateModal, updateProgramList])
 
-    const options = programList.map((program) => ({
-        label: program.title,
-        value: program._id,
-    }))
+    const options = useMemo(() => {
+        return programList.map((program: IProgramProps) => ({
+            label: program.title,
+            value: program._id,
+        }))
+    }, [programList])
 
     const handleResetSelect = () => {
-        setResetKey((prevKey) => prevKey + 1)
+        setResetKey((prevKey: number) => prevKey + 1)
     }
 
-    const chosenProgram = async (selected: Program) => {
-        await getProgramSettings({_id: selected.value}).then((result) => {
+    const chosenProgram = async (selected: IProgramProps) => {
+        await getProgramSettings({_id: selected.value}).then((result: IProgramProps) => {
             setSelectedProgram(result)
         })
     }
@@ -69,9 +71,9 @@ export const Programs = () => {
     }
 
     const updatedWorkTime = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const newWorkTime = event.target.value
+        const newWorkTime = parseInt(event.target.value)
 
-        if (newWorkTime == "0") {
+        if (newWorkTime === 0) {
             return
         }
 
@@ -79,9 +81,9 @@ export const Programs = () => {
     }
 
     const updatedRestTime = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const newRestTime = event.target.value
+        const newRestTime = parseInt(event.target.value)
 
-        if (newRestTime == "0") {
+        if (newRestTime === 0) {
             return
         }
 
@@ -89,9 +91,9 @@ export const Programs = () => {
     }
 
     const updatedRounds = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const newRounds = event.target.value
+        const newRounds = parseInt(event.target.value)
 
-        if (newRounds == "0") {
+        if (newRounds === 0) {
             return
         }
 
@@ -99,23 +101,23 @@ export const Programs = () => {
     }
 
     const updatedChangeExercises = (event: React.ChangeEvent<HTMLInputElement>, index: number) => {
-        const newExercises = [...exercises]
+        const newExercises = [...(exercises || [])]
         newExercises[index] = event.target.value
         setSelectedProgram({...selectedProgram, exercises: newExercises})
     }
 
     const updatedDeleteExercises = (index: number) => {
-        if (exercises.length <= 1 ) {
+        if (exercises?.length && exercises.length <= 1) {
             return
         }
 
-        const newExercises = [...exercises]
+        const newExercises = [...(exercises || [])]
         newExercises.splice(index, 1)
         setSelectedProgram({...selectedProgram, exercises: newExercises})
     }
 
     const updatedAddExercises = () => {
-        setSelectedProgram({...selectedProgram, exercises: [...exercises, ""]})
+        setSelectedProgram({...selectedProgram, exercises: [...(exercises || []), ""]})
     }
 
     const onDelete = async (event: React.FormEvent<HTMLButtonElement>) => {
@@ -128,7 +130,7 @@ export const Programs = () => {
         setSuccessDeleteModal(true)
         setTimeout(() => {
             setSuccessDeleteModal(false)
-            setSelectedProgram(null)
+            setSelectedProgram(undefined)
             handleResetSelect()
         }, 1200)
     }
@@ -147,7 +149,7 @@ export const Programs = () => {
         setSuccessUpdateModal(true)
         setTimeout(() => {
             setSuccessUpdateModal(false)
-            setSelectedProgram(null)
+            setSelectedProgram(undefined)
             handleResetSelect()
         }, 1200)
     }
@@ -162,13 +164,17 @@ export const Programs = () => {
 
     const handleDrop = (event: React.DragEvent<HTMLDivElement>, newIndex: number) => {
         const draggedIndex = parseInt(event.dataTransfer.getData("text/plain"))
-        const newExerciseList = [...exercises]
+        const newExerciseList = [...(exercises || [])]
         const [draggedExercise] = newExerciseList.splice(draggedIndex, 1)
         newExerciseList.splice(newIndex, 0, draggedExercise)
         setSelectedProgram({...selectedProgram, exercises: newExerciseList})
     }
 
-    const mainProgram = {title, workTime, restTime, rounds, exercises, onUpdate, onDelete, handleDragOver, handleDrop, handleDragStart, setShowUpdateModal, showUpdateModal, setShowDeleteModal, showSuccessUpdateModal, showDeleteModal, showSuccessDeleteModal, updatedTitle, updatedWorkTime, updatedRestTime, updatedRounds, updatedAddExercises, updatedChangeExercises, updatedDeleteExercises}
+    const handleShowUpdateModal = () => {
+        setShowUpdateModal(true)
+    }
+
+    const mainProgram = {title, workTime, restTime, rounds, exercises, onUpdate, onDelete, handleDragOver, handleDrop, handleDragStart, setShowUpdateModal, showUpdateModal, setShowDeleteModal, showSuccessUpdateModal, showDeleteModal, showSuccessDeleteModal, updatedTitle, updatedWorkTime, updatedRestTime, updatedRounds, updatedAddExercises, updatedChangeExercises, updatedDeleteExercises, handleShowUpdateModal}
 
     return (
         <Box>

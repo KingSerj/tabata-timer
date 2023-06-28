@@ -1,6 +1,6 @@
 import React from "react";
 
-export interface ExerciseProps {
+export interface IExerciseProps {
     onChange?: (event: React.ChangeEvent<HTMLInputElement>, index: number) => void
     onClick?: () => void
     value?: string

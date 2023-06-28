@@ -1,5 +1,5 @@
 import React from "react";
 import * as SC from "./styles"
-import { UIProps } from "../../../commons/interfaces/UIProps";
+import { IUIProps } from "../../../commons/interfaces/UIProps";
 
-export const Large = ({children}: UIProps) => <SC.Large>{children}</SC.Large>
+export const Large = ({children}: IUIProps) => <SC.Large>{children}</SC.Large>
