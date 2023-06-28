@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useState } from "react";
 import { Box } from "../../components/ui/Box";
 import { Typo } from "../../components/ui/Texts/Typo";
 import { Small } from "../../components/ui/Texts/Small";
@@ -111,9 +111,9 @@ export const Settings = () => {
         })
         setProgramSettings({
             title: "",
-            rounds: parseInt(""),
-            workTime: parseInt(""),
-            restTime: parseInt(""),
+            rounds: "",
+            workTime: "",
+            restTime: "",
             exercises: [""],
         })
         setShowSuccessModal(true)

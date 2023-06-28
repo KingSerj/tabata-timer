@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Typo } from "../ui/Texts/Typo";
 import { Input } from "../ui/Input";
 import { Button } from "../ui/Button";
@@ -13,8 +13,6 @@ export const MainProgram = ({ mainProgram }:{ mainProgram: IProgramPageProps }) 
 
     const {title, workTime, restTime, rounds, exercises = [], onUpdate, onDelete, handleDragOver, handleDrop, handleDragStart, setShowUpdateModal, showUpdateModal, setShowDeleteModal, showSuccessUpdateModal, showDeleteModal, showSuccessDeleteModal, updatedTitle, updatedWorkTime, updatedRestTime, updatedRounds, updatedAddExercises, updatedChangeExercises, updatedDeleteExercises, handleShowUpdateModal} = mainProgram
     const disabled = !title || !workTime || !restTime || !rounds || exercises.some((exercise: string) => exercise.trim() === "")
-
-
 
     return (
         <div>
