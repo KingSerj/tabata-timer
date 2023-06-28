@@ -5,7 +5,7 @@ export interface ITimerPageProps {
     handlePlay: () => void
     isStartSoundPlaying: boolean
     currentRound: number
-    rounds?: number | undefined
+    rounds?: number | string | undefined
     restExercises: String[]
     currentExerciseIndex: number
 }

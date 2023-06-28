@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import { Box } from "../../components/ui/Box";
 import { Typo } from "../../components/ui/Texts/Typo";
 import { Small } from "../../components/ui/Texts/Small";
@@ -14,9 +14,9 @@ import { v4 as uuidv4 } from "uuid"
 export const Settings = () => {
     const [programSettings, setProgramSettings] = useState<IProgramProps>({
         title: "",
-        rounds: parseInt(""),
-        workTime: parseInt(""),
-        restTime: parseInt(""),
+        rounds: "",
+        workTime: "",
+        restTime: "",
         exercises: [""],
     })
     const [showSuccessModal, setShowSuccessModal] = useState<boolean>(false)

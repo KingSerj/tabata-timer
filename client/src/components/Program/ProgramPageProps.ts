@@ -2,9 +2,9 @@ import React from "react";
 
 export interface IProgramPageProps {
     title?: string
-    workTime?: number
-    restTime?: number
-    rounds?: number
+    workTime?: number | string
+    restTime?: number | string
+    rounds?: number | string
     exercises?: string[]
     onUpdate?: (event: React.FormEvent<HTMLButtonElement>) => Promise<void>
     onDelete?: (event: React.FormEvent<HTMLButtonElement>) => Promise<void>

@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import { Typo } from "../ui/Texts/Typo";
 import { Input } from "../ui/Input";
 import { Button } from "../ui/Button";
@@ -5,7 +6,6 @@ import { Modal } from "../ui/Modal";
 import { NoButton, YesButton } from "../ui/Modal/ModalButton/styles";
 import { Small } from "../ui/Texts/Small";
 import { Exercise } from "../commons/Exercise";
-import React from "react";
 import { IProgramPageProps } from "./ProgramPageProps";
 import { v4 as uuidv4 } from "uuid"
 
@@ -13,6 +13,8 @@ export const MainProgram = ({ mainProgram }:{ mainProgram: IProgramPageProps }) 
 
     const {title, workTime, restTime, rounds, exercises = [], onUpdate, onDelete, handleDragOver, handleDrop, handleDragStart, setShowUpdateModal, showUpdateModal, setShowDeleteModal, showSuccessUpdateModal, showDeleteModal, showSuccessDeleteModal, updatedTitle, updatedWorkTime, updatedRestTime, updatedRounds, updatedAddExercises, updatedChangeExercises, updatedDeleteExercises, handleShowUpdateModal} = mainProgram
     const disabled = !title || !workTime || !restTime || !rounds || exercises.some((exercise: string) => exercise.trim() === "")
+
+
 
     return (
         <div>

@@ -5,10 +5,10 @@ import { SelectInput } from "../../components/ui/SelectInput";
 import { useGetProgramList } from "../../hooks/useGetProgramList";
 import { useTabataProgram } from "../../hooks/useTabataProgram";
 import { Modal } from "../../components/ui/Modal";
+import { MainTimer } from "../../components/Timer";
 import startSound from "../../assets/start.wav";
 import endSound from "../../assets/end.mp3";
 import { TABATA_SETTINGS_ENDPOINT } from "../../api/endpoints";
-import {MainTimer} from "../../components/Timer";
 
 const REST = "Rest"
 
@@ -53,7 +53,7 @@ export const Timer = () => {
     const chosenProgram = async (selected: IProgramProps) => {
         await getProgramSettings({_id: selected.value}).then((result: IProgramProps) => {
             setSelectedProgram(result)
-            setTimer(result?.workTime || 0)
+            setTimer(Number(result?.workTime) || 0)
             setCurrentExerciseIndex(0)
             setCurrentRound(1)
             setIsStartSoundPlaying(false)
@@ -107,7 +107,9 @@ export const Timer = () => {
                     time = restTime || 0
                 }
 
-                setTimer(time)
+                if (typeof time === "string") {
+                    setTimer(parseFloat(time))
+                }
                 return
             }
 
@@ -117,7 +119,7 @@ export const Timer = () => {
 
             if (currentRound < (rounds || 0)) {
                 setIsTimerCounting(false)
-                setTimer(workTime || 0)
+                setTimer(Number(workTime) || 0)
                 setCurrentRound((prevRound) => prevRound + 1)
                 setCurrentExerciseIndex(0)
                 playStartSound()
