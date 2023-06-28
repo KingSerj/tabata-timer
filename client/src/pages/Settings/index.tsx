@@ -9,6 +9,7 @@ import { useTabataProgram } from "../../hooks/useTabataProgram";
 import { Modal } from "../../components/ui/Modal";
 import { TABATA_ADD_ENDPOINT } from "../../api/endpoints";
 import { IProgramProps } from "../../components/commons/interfaces/ProgramProps";
+import { v4 as uuidv4 } from "uuid"
 
 export const Settings = () => {
     const [programSettings, setProgramSettings] = useState<IProgramProps>({
@@ -141,7 +142,7 @@ export const Settings = () => {
             <Button onClick={handleAddExercise}>ADD EXERCISE</Button>
             {exercises.map((exercise: string, index: number) => (
                 <Exercise
-                    key={index}
+                    key={uuidv4()}
                     index={index + 1}
                     value={exercise}
                     onChange={(event) => handleExerciseChange(event, index)}

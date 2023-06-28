@@ -188,7 +188,7 @@ export const Timer = () => {
 
     return (
         <Box>
-            <SelectInput options={options} placeholder="Choose program..." onChange={chosenProgram} isDisabled={isInputDisabled} key={resetKey}/>
+            <SelectInput key={resetKey} options={options} placeholder="Choose program..." onChange={chosenProgram} isDisabled={isInputDisabled} />
             {showSuccessModal && <Modal>Congratulations on a successful workout!</Modal>}
             {selectedProgram && <MainTimer timerProps={timerProps}/>}
             <audio ref={startSoundRef} src={startSound} onEnded={handleStartSoundEnded} />

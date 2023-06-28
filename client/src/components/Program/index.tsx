@@ -7,6 +7,7 @@ import { Small } from "../ui/Texts/Small";
 import { Exercise } from "../commons/Exercise";
 import React from "react";
 import { IProgramPageProps } from "./ProgramPageProps";
+import { v4 as uuidv4 } from "uuid"
 
 export const MainProgram = ({ mainProgram }:{ mainProgram: IProgramPageProps }) => {
 
@@ -44,7 +45,7 @@ export const MainProgram = ({ mainProgram }:{ mainProgram: IProgramPageProps }) 
             <Small>You can change the exercise order by simply dragging the exercise number and releasing it at the desired location.</Small>
             {exercises.map((exercise: string, index: number) => (
                 <Exercise
-                    key={index}
+                    key={uuidv4()}
                     draggable
                     index={index + 1}
                     value={exercise}

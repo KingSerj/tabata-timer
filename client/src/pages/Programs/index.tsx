@@ -178,7 +178,7 @@ export const Programs = () => {
 
     return (
         <Box>
-            <SelectInput key={resetKey} options={options} placeholder="Choose program..." onChange={chosenProgram}/>
+            <SelectInput key={resetKey} options={options} placeholder="Choose program..." onChange={chosenProgram} />
             <br/>
             {selectedProgram && <MainProgram mainProgram={mainProgram}/>}
         </Box>
