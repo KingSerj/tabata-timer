@@ -27,17 +27,17 @@ export const MainProgram = ({ mainProgram }:{ mainProgram: IProgramPageProps }) 
                     Are you sure you want to update this program ?
                     <br/>
                     <YesButton onClick={onUpdate}>YES</YesButton>
-                    <NoButton onClick={() => setShowUpdateModal ? setShowUpdateModal(false) : null}>NO</NoButton>
+                    <NoButton onClick={() => setShowUpdateModal && setShowUpdateModal(false)}>NO</NoButton>
                 </Modal>
             }
             {showSuccessUpdateModal && <Modal>Program has been successfully updated!</Modal>}
-            <Button onClick={() => setShowDeleteModal ? setShowDeleteModal(true) : null}>DELETE PROGRAM</Button>
+            <Button onClick={() => setShowDeleteModal && setShowDeleteModal(true)}>DELETE PROGRAM</Button>
             {showDeleteModal &&
                 <Modal>
                     Are you sure you want to delete this program ?
                     <br/>
                     <YesButton onClick={onDelete}>YES</YesButton>
-                    <NoButton onClick={() => setShowDeleteModal ? setShowDeleteModal(false) : null}>NO</NoButton>
+                    <NoButton onClick={() => setShowDeleteModal && setShowDeleteModal(false)}>NO</NoButton>
                 </Modal>}
             {showSuccessDeleteModal && <Modal>Program has been successfully deleted!</Modal>}
             <Typo>Exercises:</Typo>
@@ -49,11 +49,11 @@ export const MainProgram = ({ mainProgram }:{ mainProgram: IProgramPageProps }) 
                     draggable
                     index={index + 1}
                     value={exercise}
-                    onChange={(event) => updatedChangeExercises ? updatedChangeExercises(event, index) : null}
-                    onClick={() => updatedDeleteExercises ? updatedDeleteExercises(index) : null}
-                    onDragStart={(event: React.DragEvent<HTMLDivElement>) => handleDragStart ? handleDragStart(event, index) : null}
-                    onDragOver={(event: React.DragEvent<HTMLDivElement>) => handleDragOver ? handleDragOver(event) : null}
-                    onDrop={(event: React.DragEvent<HTMLDivElement>) => handleDrop ? handleDrop(event, index) : null}
+                    onChange={(event) => updatedChangeExercises && updatedChangeExercises(event, index)}
+                    onClick={() => updatedDeleteExercises && updatedDeleteExercises(index)}
+                    onDragStart={(event: React.DragEvent<HTMLDivElement>) => handleDragStart && handleDragStart(event, index)}
+                    onDragOver={(event: React.DragEvent<HTMLDivElement>) => handleDragOver && handleDragOver(event)}
+                    onDrop={(event: React.DragEvent<HTMLDivElement>) => handleDrop && handleDrop(event, index)}
                 />
             ))}
         </div>

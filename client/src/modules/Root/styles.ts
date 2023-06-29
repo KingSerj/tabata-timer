@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import {NavLink} from "react-router-dom";
+import {theme} from "../../theme/theme";
 
 export const Menu = styled.div`
   display: flex;
@@ -13,7 +14,7 @@ export const Menu = styled.div`
 export const MenuItem = styled(NavLink)`
   font-size: 18px;
   text-decoration: none;
-  color: #F8F7F9;
+  color: ${theme.whiteColor};
 
   &.active {
     font-weight: bold;

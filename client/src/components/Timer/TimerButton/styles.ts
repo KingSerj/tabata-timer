@@ -11,13 +11,13 @@ export const TimerButton = styled.button`
   align-items: center;
   justify-content: center;
   background-color: ${theme.buttonMainColor};
-  color: #fff;
+  color: ${theme.whiteColor};
   border: none;
   cursor: pointer;
   outline: none;
   font-size: 14px;
   font-weight: bold;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 4px ${theme.darkTransparentBlack};
 
   &:hover {
     background-color: ${theme.buttonHover};

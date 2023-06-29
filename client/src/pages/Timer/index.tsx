@@ -14,7 +14,7 @@ const REST = "Rest"
 
 export const Timer = () => {
     const [programList, setProgramList] = useState<IProgramProps[]>([])
-    const [selectedProgram, setSelectedProgram] = useState<IProgramProps | null>(null)
+    const [selectedProgram, setSelectedProgram] = useState<IProgramProps>()
     const [restExercises, setRestExercises] = useState<String[]>([])
     const [currentExerciseIndex, setCurrentExerciseIndex] = useState<number>(0)
     const [timer, setTimer] = useState<number>(0)
@@ -170,7 +170,7 @@ export const Timer = () => {
     }
 
     const handleFinishSoundEnded = () => {
-        setSelectedProgram(null)
+        setSelectedProgram(undefined)
         handleResetSelect()
         setIsInputDisabled(false)
         setShowSuccessModal(false)

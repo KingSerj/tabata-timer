@@ -5,20 +5,20 @@ export const ModalButton = styled.button`
   margin: 10px 10px 10px 0;
   font-family: "Montserrat", sans-serif;
   background-color: ${theme.buttonMainColor};
-  color: #fff;
+  color: ${theme.whiteColor};
   border: none;
   border-radius: 4px;
   padding: 8px 20px;
   font-size: 14px;
   font-weight: bold;
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 8px ${theme.transparentBlack};
   cursor: pointer;
   width: 100px;
 `
 
 export const YesButton = styled(ModalButton)`
   background-color: ${theme.buttonConfirm};
-  color: #fff;
+  color: ${theme.whiteColor};
   border: none;
   margin-right: 10px;
 
@@ -29,7 +29,7 @@ export const YesButton = styled(ModalButton)`
 
 export const NoButton = styled(ModalButton)`
   background-color: ${theme.buttonCancel};
-  color: #fff;
+  color: ${theme.whiteColor};
   border: none;
 
   &:hover {

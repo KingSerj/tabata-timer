@@ -5,13 +5,13 @@ export const Button = styled.button`
   margin: 10px 10px 10px 0;
   font-family: "Montserrat", sans-serif;
   background-color: ${theme.buttonMainColor};
-  color: #fff;
+  color: ${theme.whiteColor};
   border: none;
   border-radius: 4px;
   padding: 8px 20px;
   font-size: 14px;
   font-weight: bold;
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 8px ${theme.transparentBlack};
   cursor: pointer;
   width: 180px;
 

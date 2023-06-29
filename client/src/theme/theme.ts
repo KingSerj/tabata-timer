@@ -1,5 +1,6 @@
 export const theme = {
     boxMainColor: "#ffffff",
+    whiteColor: "#fff",
     buttonMainColor: "#8b00ff",
     buttonActive: "#4a0080",
     buttonHover: "#6300a7",
@@ -8,5 +9,13 @@ export const theme = {
     buttonConfirmHover: "#2e9b56",
     buttonCancel: "#e76b6b",
     buttonCancelHover: "#c04444",
-    exerciseBoxMainColor: "rgba(124, 124, 124, 0.25)"
+    buttonDelete: "#ffcccc",
+    buttonDeleteActive: "#ff4d4d",
+    buttonDeleteHover: "#ff8080",
+    exerciseBoxMainColor: "rgba(124, 124, 124, 0.25)",
+    exerciseLightTransparentBlack: "rgba(0, 0, 0, 0.3)",
+    lightTransparentBlack: "rgba(0, 0, 0, 0.1)",
+    darkTransparentBlack: "rgba(0, 0, 0, 0.2)",
+    transparentBlack: "rgba(0,0,0,0.5)",
+    inputBorderBottom: "#ccc"
 }
