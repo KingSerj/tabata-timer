@@ -1,10 +1,10 @@
-export interface Program {
-    _id: string
-    title: string
-    exercises: string[]
-    rounds: number
-    workTime: number
-    restTime: number
-    selected?: object[]
+export interface IProgramProps {
+    _id?: string
+    title?: string
+    restTime?: number | string
+    workTime?: number | string
+    rounds?: number | string
+    exercises?: Array<string>
     value?: string
+    selected?: object[]
 }

@@ -1,20 +1,20 @@
-import React, { useCallback, useEffect, useState, useRef } from "react";
+import React, {useCallback, useEffect, useState, useRef, useMemo} from "react";
 import { Box } from "../../components/ui/Box";
-import { Program } from "../../components/commons/interfaces/ProgramProps";
+import { IProgramProps } from "../../components/commons/interfaces/ProgramProps";
 import { SelectInput } from "../../components/ui/SelectInput";
 import { useGetProgramList } from "../../hooks/useGetProgramList";
 import { useTabataProgram } from "../../hooks/useTabataProgram";
 import { Modal } from "../../components/ui/Modal";
+import { MainTimer } from "../../components/Timer";
 import startSound from "../../assets/start.wav";
 import endSound from "../../assets/end.mp3";
 import { TABATA_SETTINGS_ENDPOINT } from "../../api/endpoints";
-import {MainTimer} from "../../components/Timer";
 
 const REST = "Rest"
 
 export const Timer = () => {
-    const [programList, setProgramList] = useState<Program[]>([])
-    const [selectedProgram, setSelectedProgram] = useState<Program | null>(null)
+    const [programList, setProgramList] = useState<IProgramProps[]>([])
+    const [selectedProgram, setSelectedProgram] = useState<IProgramProps>()
     const [restExercises, setRestExercises] = useState<String[]>([])
     const [currentExerciseIndex, setCurrentExerciseIndex] = useState<number>(0)
     const [timer, setTimer] = useState<number>(0)
@@ -22,8 +22,8 @@ export const Timer = () => {
     const [currentRound, setCurrentRound] = useState<number>(1)
     const [showSuccessModal, setShowSuccessModal] = useState(false)
     const [resetKey, setResetKey] = useState<number>(0)
-    const [isStartSoundPlaying, setIsStartSoundPlaying] = useState(false)
-    const [isInputDisabled, setIsInputDisabled] = useState(false)
+    const [isStartSoundPlaying, setIsStartSoundPlaying] = useState<boolean>(false)
+    const [isInputDisabled, setIsInputDisabled] = useState<boolean>(false)
 
     const getProgramList = useGetProgramList()
     const getProgramSettings = useTabataProgram(TABATA_SETTINGS_ENDPOINT, "POST")
@@ -34,7 +34,7 @@ export const Timer = () => {
     const { workTime, restTime, rounds, exercises } = selectedProgram || {}
 
     const updateProgramList = useCallback(() => {
-        getProgramList().then((result) => {
+        getProgramList().then((result: IProgramProps[]) => {
             setProgramList(result)
         })
     }, [getProgramList])
@@ -43,15 +43,17 @@ export const Timer = () => {
         updateProgramList()
     }, [updateProgramList])
 
-    const options = programList.map((program) => ({
-        label: program.title,
-        value: program._id,
-    }))
+    const options = useMemo(() => {
+        return programList.map((program: IProgramProps) => ({
+            label: program.title,
+            value: program._id,
+        }))
+    }, [programList])
 
-    const chosenProgram = async (selected: Program) => {
-        await getProgramSettings({_id: selected.value}).then((result) => {
+    const chosenProgram = async (selected: IProgramProps) => {
+        await getProgramSettings({_id: selected.value}).then((result: IProgramProps) => {
             setSelectedProgram(result)
-            setTimer(result?.workTime || 0)
+            setTimer(Number(result?.workTime) || 0)
             setCurrentExerciseIndex(0)
             setCurrentRound(1)
             setIsStartSoundPlaying(false)
@@ -105,7 +107,9 @@ export const Timer = () => {
                     time = restTime || 0
                 }
 
-                setTimer(time)
+                if (typeof time === "string") {
+                    setTimer(parseFloat(time))
+                }
                 return
             }
 
@@ -115,7 +119,7 @@ export const Timer = () => {
 
             if (currentRound < (rounds || 0)) {
                 setIsTimerCounting(false)
-                setTimer(workTime || 0)
+                setTimer(Number(workTime) || 0)
                 setCurrentRound((prevRound) => prevRound + 1)
                 setCurrentExerciseIndex(0)
                 playStartSound()
@@ -138,19 +142,19 @@ export const Timer = () => {
         }
     }, [isTimerCounting, timer, currentExerciseIndex, restExercises, selectedProgram, currentRound])
 
-    const handlePlay = () => {
+    const handlePlay = useCallback(() => {
         if (!isStartSoundPlaying) {
             setIsStartSoundPlaying(true)
             playStartSound()
             setIsInputDisabled(true)
         }
-    }
+    }, [isStartSoundPlaying]);
 
-    const handlePause = () => {
+    const handlePause = useCallback(() => {
         setIsTimerCounting(false)
         setIsInputDisabled(false)
         setIsStartSoundPlaying(false)
-    }
+    }, [])
 
     const playStartSound = () => {
         startSoundRef.current?.play()
@@ -166,7 +170,7 @@ export const Timer = () => {
     }
 
     const handleFinishSoundEnded = () => {
-        setSelectedProgram(null)
+        setSelectedProgram(undefined)
         handleResetSelect()
         setIsInputDisabled(false)
         setShowSuccessModal(false)
@@ -186,7 +190,7 @@ export const Timer = () => {
 
     return (
         <Box>
-            <SelectInput options={options} placeholder="Choose program..." onChange={chosenProgram} isDisabled={isInputDisabled} key={resetKey}/>
+            <SelectInput key={resetKey} options={options} placeholder="Choose program..." onChange={chosenProgram} isDisabled={isInputDisabled} />
             {showSuccessModal && <Modal>Congratulations on a successful workout!</Modal>}
             {selectedProgram && <MainTimer timerProps={timerProps}/>}
             <audio ref={startSoundRef} src={startSound} onEnded={handleStartSoundEnded} />

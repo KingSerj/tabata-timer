@@ -1,7 +1,8 @@
 import {useCallback} from "react";
+import {IProgramProps} from "../components/commons/interfaces/ProgramProps";
 
 export const useTabataProgram = (url: string, method: string) => {
-    return useCallback(async (body: any) => {
+    return useCallback(async (body: IProgramProps) => {
         try {
             const res = await fetch(url, {
                 method: method,
@@ -19,7 +20,7 @@ export const useTabataProgram = (url: string, method: string) => {
 
             return await res.json();
         } catch (e) {
-            console.log(e);
+            console.error(e);
         }
     }, [url, method]);
 };

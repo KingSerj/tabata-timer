@@ -1,6 +1,8 @@
-export interface SelectProps {
+import {IProgramProps} from "../../commons/interfaces/ProgramProps";
+
+export interface ISelectProps {
     options?: Array<object>
     placeholder: string
-    onChange?: (selected: any) => Promise<void>
+    onChange?: (selected: IProgramProps) => void
     isDisabled?: boolean
 }

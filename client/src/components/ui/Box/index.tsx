@@ -1,5 +1,5 @@
 import React from "react";
 import * as SC from "./styles"
-import { UIProps } from "../../commons/interfaces/UIProps";
+import { IUIProps } from "../../commons/interfaces/UIProps";
 
-export const Box = ({children}: UIProps) => <SC.Box>{children}</SC.Box>
+export const Box = ({children}: IUIProps) => <SC.Box>{children}</SC.Box>

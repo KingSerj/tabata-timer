@@ -8,89 +8,91 @@ import { Button } from "../../components/ui/Button";
 import { useTabataProgram } from "../../hooks/useTabataProgram";
 import { Modal } from "../../components/ui/Modal";
 import { TABATA_ADD_ENDPOINT } from "../../api/endpoints";
+import { IProgramProps } from "../../components/commons/interfaces/ProgramProps";
+import { v4 as uuidv4 } from "uuid"
 
 export const Settings = () => {
-    const [programSettings, setProgramSettings] = useState({
+    const [programSettings, setProgramSettings] = useState<IProgramProps>({
         title: "",
         rounds: "",
         workTime: "",
         restTime: "",
         exercises: [""],
     })
-    const [showSuccessModal, setShowSuccessModal] = useState(false)
+    const [showSuccessModal, setShowSuccessModal] = useState<boolean>(false)
 
-    const { title, workTime, restTime, rounds, exercises } = programSettings
+    const { title, workTime, restTime, rounds, exercises = [] } = programSettings
 
     const handleAddExercise = () => {
-        setProgramSettings((prevSettings) => ({
+        setProgramSettings((prevSettings: IProgramProps) => ({
             ...prevSettings,
-            exercises: [...prevSettings.exercises, ""]
+            exercises: [...(prevSettings.exercises || []), ""]
         }))
     }
 
     const handleDeleteExercise = (index: number) => {
-        if (exercises.length <= 1) {
+        if (exercises?.length && exercises.length <= 1) {
             return
         }
 
-        const updatedExercises = [...exercises]
+        const updatedExercises = [...(exercises || [])]
         updatedExercises.splice(index, 1)
-        setProgramSettings((prevSettings) => ({
+        setProgramSettings((prevSettings: IProgramProps) => ({
             ...prevSettings,
             exercises: updatedExercises
         }))
     }
 
     const handleExerciseChange = (event: React.ChangeEvent<HTMLInputElement>, index: number) => {
-        const updatedExercises = [...exercises]
+        const updatedExercises = [...(exercises || [])]
         updatedExercises[index] = event.target.value
-        setProgramSettings((prevSettings) => ({
+        setProgramSettings((prevSettings: IProgramProps) => ({
             ...prevSettings,
             exercises: updatedExercises
         }))
     }
 
     const handleTitleAdd = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setProgramSettings((prevSettings) => ({
+        setProgramSettings((prevSettings: IProgramProps) => ({
             ...prevSettings,
             title: event.target.value,
         }))
     }
 
     const handleWorkoutTimeAdd = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const newWorkTime = event.target.value
+        const newWorkTime = parseInt(event.target.value)
 
-        if (newWorkTime == "0") {
+        if (newWorkTime === 0) {
             return
         }
 
-        setProgramSettings((prevSettings) => ({
+        setProgramSettings((prevSettings: IProgramProps) => ({
             ...prevSettings,
             workTime: newWorkTime,
         }))
     }
 
     const handleRestTimeAdd = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const newRestTime = event.target.value
+        const newRestTime = parseInt(event.target.value)
 
-        if (newRestTime == "0") {
+        if (newRestTime === 0) {
             return
         }
 
-        setProgramSettings((prevSettings) => ({
+        setProgramSettings((prevSettings: IProgramProps) => ({
             ...prevSettings,
             restTime: newRestTime,
         }))
     }
 
     const handleRoundsAdd = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const newRounds = event.target.value
+        const newRounds = parseInt(event.target.value)
 
-        if (newRounds == "0") {
+        if (newRounds === 0) {
             return
         }
 
-        setProgramSettings((prevSettings) => ({
+        setProgramSettings((prevSettings: IProgramProps) => ({
             ...prevSettings,
             rounds: newRounds,
         }))
@@ -138,9 +140,9 @@ export const Settings = () => {
             {showSuccessModal && <Modal>Program has been successfully saved!</Modal>}
             <Typo>Exercises:</Typo>
             <Button onClick={handleAddExercise}>ADD EXERCISE</Button>
-            {exercises.map((exercise, index) => (
+            {exercises.map((exercise: string, index: number) => (
                 <Exercise
-                    key={index}
+                    key={uuidv4()}
                     index={index + 1}
                     value={exercise}
                     onChange={(event) => handleExerciseChange(event, index)}

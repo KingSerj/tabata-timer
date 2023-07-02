@@ -1,7 +1,8 @@
-import {useCallback} from "react";
+import { useCallback } from "react";
+import { TABATA_GET_ENDPOINT } from "../api/endpoints";
 
 export const useGetProgramList = () => {
     return useCallback(() =>
-            fetch("http://localhost:3002/api/tabata/titles")
-                .then((response) => response.json()), []);
-};
+            fetch(TABATA_GET_ENDPOINT)
+                .then((response) => response.json()), [])
+}

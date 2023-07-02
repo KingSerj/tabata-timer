@@ -1,6 +1,6 @@
 import React from "react";
-import {Box} from "../../components/ui/Box";
-import {Description} from "../../components/ui/Texts/Description";
+import { Box } from "../../components/ui/Box";
+import { Description } from "../../components/ui/Texts/Description";
 
 export const About = () => (
     <Box>

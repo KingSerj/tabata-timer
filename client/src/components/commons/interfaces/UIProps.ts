@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
 
-export interface UIProps {
+export interface IUIProps {
     children?: ReactNode
     type?: "number" | "text"
     onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void

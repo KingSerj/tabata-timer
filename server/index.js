@@ -1,5 +1,5 @@
 const express = require("express")
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const cors = require("cors")
 const tabataRoutes = require("./routes/tabataRoutes")
 
@@ -20,7 +20,7 @@ const start = async () => {
 
         app.listen(PORT, () => console.log(`Server started on port - ${PORT}`))
     } catch (e) {
-        console.log(e)
+        console.error(e)
     }
 }
 start()

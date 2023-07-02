@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import { Root } from './components/Root';
+import { Root } from './modules/Root';
 import { Settings } from "./pages/Settings";
 
 describe("Успешные рендеры", () => {

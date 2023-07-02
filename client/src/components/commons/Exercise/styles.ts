@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import {theme} from "../../../theme/theme";
 
 export const InputContainer = styled.div`
   font-family: "Montserrat", sans-serif;
@@ -23,7 +24,7 @@ export const ExerciseInput = styled.input`
   font-size: 16px;
   width: 400px;
   height: 29px;
-  border: 1px solid rgba(0, 0, 0, 0.3);
+  border: 1px solid ${theme.exerciseLightTransparentBlack};
   border-radius: 3px 0 0 3px;
 
   &:focus {
@@ -35,15 +36,15 @@ export const DeleteButton = styled.button`
   font-family: "Montserrat", sans-serif;
   font-weight: bold;
   height: 33px;
-  background-color: #ffcccc;
+  background-color: ${theme.buttonDelete};
   border: none;
   cursor: pointer;
 
   &:hover {
-    background-color: #ff8080;
+    background-color: ${theme.buttonDeleteHover};
   }
 
   &:active {
-    background-color: #ff4d4d;
+    background-color: ${theme.buttonDeleteActive};
   }
 `
