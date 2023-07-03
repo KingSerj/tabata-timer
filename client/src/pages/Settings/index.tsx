@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Box } from "../../components/ui/Box";
 import { Typo } from "../../components/ui/Texts/Typo";
 import { Small } from "../../components/ui/Texts/Small";
@@ -23,11 +23,15 @@ export const Settings = () => {
 
     const { title, workTime, restTime, rounds, exercises = [] } = programSettings
 
+    const exerciseRefs = useRef<string[]>([])
+
     const handleAddExercise = () => {
+        const newExerciseId = uuidv4()
         setProgramSettings((prevSettings: IProgramProps) => ({
             ...prevSettings,
             exercises: [...(prevSettings.exercises || []), ""]
         }))
+        exerciseRefs.current = [...exerciseRefs.current, newExerciseId]
     }
 
     const handleDeleteExercise = (index: number) => {
@@ -35,16 +39,17 @@ export const Settings = () => {
             return
         }
 
-        const updatedExercises = [...(exercises || [])]
+        const updatedExercises = [...exercises]
         updatedExercises.splice(index, 1)
         setProgramSettings((prevSettings: IProgramProps) => ({
             ...prevSettings,
             exercises: updatedExercises
         }))
+        exerciseRefs.current = exerciseRefs.current.filter((_, i) => i !== index)
     }
 
     const handleExerciseChange = (event: React.ChangeEvent<HTMLInputElement>, index: number) => {
-        const updatedExercises = [...(exercises || [])]
+        const updatedExercises = [...exercises]
         updatedExercises[index] = event.target.value
         setProgramSettings((prevSettings: IProgramProps) => ({
             ...prevSettings,
@@ -98,6 +103,16 @@ export const Settings = () => {
         }))
     }
 
+    const generateExerciseId = (index: number) => {
+        if (exerciseRefs.current[index]) {
+            return exerciseRefs.current[index]
+        }
+
+        const newExerciseId = uuidv4()
+        exerciseRefs.current[index] = newExerciseId
+        return newExerciseId
+    }
+
     const savedProgram = useTabataProgram(TABATA_ADD_ENDPOINT, "POST")
 
     const onSave = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -142,7 +157,7 @@ export const Settings = () => {
             <Button onClick={handleAddExercise}>ADD EXERCISE</Button>
             {exercises.map((exercise: string, index: number) => (
                 <Exercise
-                    key={uuidv4()}
+                    key={generateExerciseId(index)}
                     index={index + 1}
                     value={exercise}
                     onChange={(event) => handleExerciseChange(event, index)}
